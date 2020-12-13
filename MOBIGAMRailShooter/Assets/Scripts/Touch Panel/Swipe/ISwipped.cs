@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ISwipped
 {
-    void OnSwipe(SwipeEventArgs args);
+    void OnSwipe(object sender, SwipeEventArgs args);
 }

@@ -44,7 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 180395d85bdb76b45aec81545a1d0563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 20
+  bulletType: 0
+  bulletLifetime: 3
+  rotationVector: {x: 4, y: 20, z: 12}
+  childTransform: {fileID: 7724084040152110357}
 --- !u!1 &1551308638543005230
 GameObject:
   m_ObjectHideFlags: 0

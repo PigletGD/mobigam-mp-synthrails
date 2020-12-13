@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class OnScreenStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class OnScreenStick : MonoBehaviour, UnityEngine.EventSystems.IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     public Image JoystickParent;
     public Image Stick;
@@ -30,6 +30,8 @@ public class OnScreenStick : MonoBehaviour, IDragHandler, IPointerDownHandler, I
                 JoystickVector.Normalize();
 
             Stick.rectTransform.localPosition = new Vector2(JoystickVector.x * half_w, JoystickVector.y * half_h);
+
+            //Debug.Log(JoystickVector);
         }
     }
 

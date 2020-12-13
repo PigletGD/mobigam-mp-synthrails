@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class JoystickHolder : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class JoystickHolder : MonoBehaviour, UnityEngine.EventSystems.IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     public OnScreenStick Joystick = null;
     public Image hitBox;

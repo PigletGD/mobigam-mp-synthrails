@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDragged
+public interface IDragHandler
 {
     void OnDrag(DragEventArgs args);
 }

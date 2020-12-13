@@ -22,16 +22,11 @@ public class SwipeEventArgs : EventArgs
     // Direction of the swipe
     private SwipeDirections swipeDirections;
     public SwipeDirections SwipeDirection { get { return swipeDirections; } }
-    
-    // Hit object
-    private GameObject hitObject;
-    public GameObject HitObject { get { return hitObject; } }
 
-    public SwipeEventArgs(Vector2 pos, Vector2 v, SwipeDirections dir, GameObject hit)
+    public SwipeEventArgs(Vector2 pos, Vector2 v, SwipeDirections dir)
     {
         swipePos = pos;
         swipeVector = v;
         swipeDirections = dir;
-        hitObject = hit;
     }
 }

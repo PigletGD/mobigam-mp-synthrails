@@ -3,17 +3,16 @@ using UnityEngine;
 
 public class DragEventArgs : EventArgs
 {
-    // Current state of the finger
-    private Touch targetFinger;
-    public Touch TargetFinger { get { return targetFinger; } }
+    // Set to private to avoid editing
+    private Vector2 _startPosition;
+    public Vector2 StartPosition { get { return _startPosition; } }
 
-    // Hit object
-    private GameObject hitObject;
-    public GameObject HitObject { get { return hitObject; } }
+    private Vector2 _currentPosition;
+    public Vector2 CurrentPosition { get { return _currentPosition; } }
 
-    public DragEventArgs(Touch finger, GameObject obj)
+    public DragEventArgs(Vector2 startPos, Vector2 curPos)
     {
-        targetFinger = finger;
-        hitObject = obj;
+        _startPosition = startPos;
+        _currentPosition = curPos;
     }
 }

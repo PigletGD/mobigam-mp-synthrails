@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ITapped
 {
-    void OnTap();
+    void OnTap(object sender, TapEventArgs args);
 }
