@@ -8,7 +8,7 @@ public class PlayerShooting : MonoBehaviour
 
     private Transform ownerTransform;
     public Transform planeNuzzle;
-    public GameObject bullet;
+    public ObjectPool bulletPool;
 
     private void Start()
     {
@@ -29,6 +29,9 @@ public class PlayerShooting : MonoBehaviour
 
     private void Fire()
     {
-        Instantiate(bullet, planeNuzzle.position, ownerTransform.rotation);
+        GameObject bullet = bulletPool.RetrieveObject();
+
+        bullet.transform.position = planeNuzzle.position;
+        bullet.transform.rotation = ownerTransform.rotation;
     }
 }
