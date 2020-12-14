@@ -17,9 +17,9 @@ public class BulletBehaviour : MonoBehaviour
     private float scaleTime = 1.0f;
     private float scaleTick = 0;
 
-    [SerializeField] private Vector3 rotationVector;
+    [SerializeField] private Vector3 rotationVector = Vector3.zero;
 
-    [SerializeField] private Transform childTransform;
+    [SerializeField] private Transform childTransform = null;
 
     private void Awake()
     {

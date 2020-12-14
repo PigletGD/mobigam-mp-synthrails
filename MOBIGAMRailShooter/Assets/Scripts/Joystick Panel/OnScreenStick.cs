@@ -17,8 +17,6 @@ public class OnScreenStick : MonoBehaviour, UnityEngine.EventSystems.IDragHandle
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(JoystickParent.rectTransform, eventData.position, eventData.pressEventCamera, out localPos))
         {
-            //Debug.Log(localPos);
-
             float half_w = JoystickParent.rectTransform.rect.width / 2.0f;
             float half_h = JoystickParent.rectTransform.rect.height / 2.0f;
 
@@ -30,8 +28,6 @@ public class OnScreenStick : MonoBehaviour, UnityEngine.EventSystems.IDragHandle
                 JoystickVector.Normalize();
 
             Stick.rectTransform.localPosition = new Vector2(JoystickVector.x * half_w, JoystickVector.y * half_h);
-
-            //Debug.Log(JoystickVector);
         }
     }
 
