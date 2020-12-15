@@ -15,5 +15,9 @@ public class LevelsMenu : MonoBehaviour
         levelThree.SetActive(SaveManager.Instance.state.unlockedLevelThree);
     }
 
-    public void PlayLevel() => SceneManager.LoadScene("GameScene");
+    public void PlayLevel()
+    {
+        AudioManager.Instance.Stop("MainMenuMusic");
+        SceneManager.LoadScene("GameScene");
+    }
 }

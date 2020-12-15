@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform planeModelTransform = null;
     public Transform aimTargetTransform = null;
 
-    public PlayerInfo playerInfo;
+    public PlayerInfo playerInfo = null;
     public float moveSpeed = 10;
     public float lookSpeed = 340;
     public float targetDepth = 5;
@@ -26,12 +26,14 @@ public class PlayerMovement : MonoBehaviour
     private bool isRolling = false;
     private float rollTick = 0.3f;
 
-    private float initialZ;
+    private float initialZ = 0;
 
-    private float portraitHeight;
-    private Vector3 initialPlayerPoint;
+    private float portraitHeight = 0;
+    private Vector3 initialPlayerPoint = Vector3.zero;
 
     private bool isLandscape = false;
+
+    [SerializeField] private Animator playerAnim = null;
 
     // Start is called before the first frame update
     void Start()
@@ -164,6 +166,8 @@ public class PlayerMovement : MonoBehaviour
         float rollSpeed = playerInfo.movementSpeed * 5;
 
         isRolling = true;
+
+        playerAnim.SetTrigger("Roll");
 
         do
         {

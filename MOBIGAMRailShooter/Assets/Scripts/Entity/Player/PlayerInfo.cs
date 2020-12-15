@@ -11,15 +11,20 @@ public class PlayerInfo : MonoBehaviour
     public int ammoGreen = 20;
     public int ammoBlue = 20;
 
+    public TouchPanel touchPanel = null;
 
-    public TouchPanel touchPanel;
-
-    private MeshRenderer MR;
-    private Color currentColor;
-    private Color targetColor;
+    private MeshRenderer MR = null;
+    private Color currentColor = Color.white;
+    private Color targetColor = Color.white;
     private float currentLerpTime = 0.0f;
     private float lerpTime = 0.1f;
     private bool transitioningColor = false;
+
+    [SerializeField] ObjectPool explosionPool = null;
+
+    [SerializeField] GameHUD gameHUD = null;
+
+    [SerializeField] GameEventsSO onPlayerDeath = null;
 
     private void Awake()
     {
@@ -27,6 +32,8 @@ public class PlayerInfo : MonoBehaviour
 
         SetPlayerType(EntityType.RED);
         currentColor = Color.red;
+
+        AudioManager.Instance.PlayLoop("GameMusic");
     }
 
     private void Start()
@@ -107,9 +114,21 @@ public class PlayerInfo : MonoBehaviour
     {
         health -= damage;
 
+        gameHUD.RemoveHeart();
+
         if (health <= 0)
-            Debug.Log("Dead");
+            Die();
     }
 
+    public void Die()
+    {
+        GameObject go = explosionPool.RetrieveObject();
+        go.transform.position = transform.position;
 
+        gameHUD.DisplayResults();
+
+        onPlayerDeath.Raise();
+
+        gameObject.SetActive(false);
+    }
 }

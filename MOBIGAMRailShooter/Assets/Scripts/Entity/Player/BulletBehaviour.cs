@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BulletBehaviour : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class BulletBehaviour : MonoBehaviour
 
     [SerializeField] private Transform childTransform = null;
 
-    [SerializeField] private Rigidbody RB;
+    [SerializeField] private Rigidbody RB = null;
 
     private void Awake()
     {
@@ -56,21 +57,28 @@ public class BulletBehaviour : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             EnemyBehaviour EB = collision.gameObject.GetComponent<EnemyBehaviour>();
-            if(EB.weaknessType == bulletType)
-                EB.TakeDamage(SaveManager.Instance.state.bulletDamage);
-
-            StopAllCoroutines();
-
-            ownerTransform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-            scaleTick = 0.0f;
-            hasLaunched = false;
-
-            gameObject.SetActive(false);
+            if (EB.weaknessType == bulletType)
+            {
+                if (fullyCharged) EB.TakeDamage(SaveManager.Instance.state.bulletDamage + 2);
+                else EB.TakeDamage(SaveManager.Instance.state.bulletDamage);
+            }
         }
         else if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerInfo>().TakeDamage(1);
+        }
+        else if (collision.gameObject.tag == "Boss One")
+        {
+            BossOneBehaviour BOB = collision.gameObject.GetComponent<BossOneBehaviour>();
+            if (BOB.weaknessType == bulletType)
+            {
+                if (fullyCharged) BOB.TakeDamage(SaveManager.Instance.state.bulletDamage + 2);
+                else BOB.TakeDamage(SaveManager.Instance.state.bulletDamage);
+            }
+        }
 
+        if (collision.gameObject.tag != "Bullet" && collision.gameObject.tag != "Money")
+        {
             StopAllCoroutines();
 
             ownerTransform.localScale = new Vector3(0.4f, 0.4f, 0.4f);

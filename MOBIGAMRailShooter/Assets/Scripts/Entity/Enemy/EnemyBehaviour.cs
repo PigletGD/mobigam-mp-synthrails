@@ -8,14 +8,15 @@ public class EnemyBehaviour : MonoBehaviour
     public EntityType enemyType = EntityType.NONE;
     public EntityType weaknessType = EntityType.NONE;
 
-    private MeshRenderer MR;
+    private MeshRenderer MR = null;
 
-    [SerializeField] GameEventsSO onEnemyDeath;
+    [SerializeField] GameEventsSO onEnemyDeath = null;
 
-    [SerializeField] Transform aimObject;
-    private Transform player;
+    [SerializeField] Transform aimObject = null;
+    private Transform player = null;
 
-    private ObjectPool bulletPool;
+    private ObjectPool bulletPool = null;
+    private ObjectPool explosionPool = null;
 
     private void Awake()
     {
@@ -24,6 +25,8 @@ public class EnemyBehaviour : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         bulletPool = GameObject.FindGameObjectWithTag("Bullet Pool").GetComponent<ObjectPool>();
+
+        explosionPool = GameObject.FindGameObjectWithTag("Explosion Pool").GetComponent<ObjectPool>();
     }
 
     private void OnEnable()
@@ -76,6 +79,9 @@ public class EnemyBehaviour : MonoBehaviour
 
         onEnemyDeath.Raise();
 
+        GameObject go = explosionPool.RetrieveObject();
+        go.transform.position = transform.position;
+
         gameObject.SetActive(false);
     }
 
@@ -85,7 +91,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(interval - 0.25f, interval + 0.25f));
+            yield return new WaitForSeconds(Random.Range(interval + 0.25f, interval + 0.75f));
 
             GameObject bullet = bulletPool.RetrieveObject();
 

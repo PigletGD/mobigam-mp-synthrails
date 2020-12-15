@@ -29,11 +29,6 @@ public class ShopMenu : MonoBehaviour
     bool isDamageMaxed = false;
     bool isAmmoMaxed = false;
 
-    [SerializeField] VerticalLayoutGroup groupOne;
-    [SerializeField] VerticalLayoutGroup groupTwo;
-    [SerializeField] VerticalLayoutGroup groupThree;
-    [SerializeField] VerticalLayoutGroup groupFour;
-
     private void OnEnable()
     {
         SaveState saveState = SaveManager.Instance.state;

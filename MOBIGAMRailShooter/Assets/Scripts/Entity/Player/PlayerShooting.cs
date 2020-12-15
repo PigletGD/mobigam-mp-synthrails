@@ -1,20 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    public TouchPanel touchPanel;
+    public TouchPanel touchPanel = null;
 
-    public PlayerInfo playerInfo;
+    public PlayerInfo playerInfo = null;
 
-    private Transform ownerTransform;
-    public Transform planeNuzzle;
-    public ObjectPool bulletPool;
+    private Transform ownerTransform = null;
+    public Transform planeNuzzle = null;
+    public ObjectPool bulletPool = null;
 
-    private GameObject bullet;
+    private GameObject bullet = null;
 
     private bool currentlyDragging = false;
 
-    [SerializeField] private GameHUD gameHUD;
+    [SerializeField] private GameHUD gameHUD = null;
 
     private bool spentAmmo = false;
 
@@ -73,6 +74,12 @@ public class PlayerShooting : MonoBehaviour
                 {
                     playerInfo.ammoRed--;
                     spentAmmo = true;
+
+                    if (playerInfo.ammoRed <= 0)
+                    {
+                        gameHUD.AmmoReload(0);
+                        StartCoroutine(Reload(0));
+                    }
                 }
                 break;
             case EntityType.GREEN:
@@ -80,6 +87,13 @@ public class PlayerShooting : MonoBehaviour
                 {
                     playerInfo.ammoGreen--;
                     spentAmmo = true;
+
+                    if (playerInfo.ammoGreen <= 0)
+                    {
+                        gameHUD.AmmoReload(1);
+                        StartCoroutine(Reload(1));
+                    }
+                        
                 }
                 break;
             case EntityType.BLUE:
@@ -87,6 +101,12 @@ public class PlayerShooting : MonoBehaviour
                 {
                     playerInfo.ammoBlue--;
                     spentAmmo = true;
+
+                    if (playerInfo.ammoBlue <= 0)
+                    {
+                        gameHUD.AmmoReload(2);
+                        StartCoroutine(Reload(2));
+                    }
                 }
                 break;
         }
@@ -104,6 +124,18 @@ public class PlayerShooting : MonoBehaviour
         currentlyDragging = true;
     }
 
+    IEnumerator Reload(int value)
+    {
+        yield return new WaitForSeconds(5);
+
+        switch (value)
+        {
+            case 0: playerInfo.ammoRed = SaveManager.Instance.state.ammoCapacity; break;
+            case 1: playerInfo.ammoGreen = SaveManager.Instance.state.ammoCapacity; break;
+            case 2: playerInfo.ammoBlue = SaveManager.Instance.state.ammoCapacity; break;
+        }
+    }
+
     private void AdjustPosition()
     {
         bullet.transform.position = planeNuzzle.position;
@@ -112,6 +144,8 @@ public class PlayerShooting : MonoBehaviour
 
     private void Fire()
     {
+        AudioManager.Instance.Play("Shot");
+
         BulletBehaviour BO = bullet.GetComponent<BulletBehaviour>();
         BO.Fire();
 

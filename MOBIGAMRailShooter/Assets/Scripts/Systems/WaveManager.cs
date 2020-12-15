@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField] ObjectPool virusPool;
+    [SerializeField] ObjectPool virusPool = null;
+    [SerializeField] ObjectPool moneyPool = null;
+    [SerializeField] GameObject boss = null;
 
     bool isBossTime = false;
 
@@ -12,12 +14,11 @@ public class WaveManager : MonoBehaviour
 
     private int currentAmountOfEnemies = 0;
 
-    [SerializeField] Camera cam;
+    [SerializeField] Camera cam = null;
 
-    private bool isLandscape;
+    private bool isLandscape = false;
 
-    private float portraitHeight;
-
+    private float portraitHeight = 0;
     private void Start()
     {
         if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
@@ -36,6 +37,7 @@ public class WaveManager : MonoBehaviour
         }
 
         StartCoroutine("SpawnEnemies");
+        StartCoroutine("SpawnMoney");
     }
 
     // Update is called once per frame
@@ -43,7 +45,7 @@ public class WaveManager : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (timer > 300.0f)
+        if (timer > 1.0f)
             isBossTime = true;
 
         if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
@@ -61,7 +63,7 @@ public class WaveManager : MonoBehaviour
             if (currentAmountOfEnemies <= 0)
             {
                 int minutes = (int)timer / 60;
-                currentAmountOfEnemies = Random.Range(1 + minutes, 3 + (minutes * 2));
+                currentAmountOfEnemies = Random.Range(1, 2 + minutes);
 
                 for (int i = 0; i < currentAmountOfEnemies; i++)
                 {
@@ -83,6 +85,34 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    IEnumerator SpawnMoney()
+    {
+        yield return new WaitForSeconds(1);
+
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(1f, 2f));
+
+            Vector3 pos = cam.WorldToViewportPoint(new Vector3(0, 0, cam.nearClipPlane));
+            pos.x = Random.Range(0.25f, 0.75f);
+            pos.y = Random.Range(0.5f, 0.8f);
+
+            if (!isLandscape)
+                pos.y = Mathf.Clamp(pos.y, ((Screen.height * 0.5f) - (portraitHeight * 0.5f)) / Screen.height, ((Screen.height * 0.5f) + (portraitHeight * 0.5f)) / Screen.height);
+
+            GameObject go = moneyPool.RetrieveObject();
+            go.transform.position = cam.ViewportToWorldPoint(pos);
+            go.transform.position = new Vector3(go.transform.position.x, go.transform.position.y, 20);
+
+            yield return null;
+        }
+    }
+
+    private void SpawnBoss()
+    {
+        Instantiate(boss, new Vector3(0, 8, 40), boss.transform.rotation);
+    }
+
     public void DecreaseEnemyCount()
     {
         currentAmountOfEnemies -= 1;
@@ -90,6 +120,8 @@ public class WaveManager : MonoBehaviour
         if (currentAmountOfEnemies <= 0 && isBossTime)
         {
             StopAllCoroutines();
+
+            SpawnBoss();
         }
     }
 }

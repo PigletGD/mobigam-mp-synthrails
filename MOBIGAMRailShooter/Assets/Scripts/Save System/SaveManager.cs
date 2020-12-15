@@ -34,12 +34,17 @@ public class SaveManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Save"))
         {
             state = SerializationHelper.Deserialize<SaveState>(PlayerPrefs.GetString("Save"));
+
+            if (state == null)
+            {
+                state = new SaveState();
+
+                Save();
+            }
         }
         else
         {
-            state = new SaveState();
-
-            Save();
+            Debug.Log("Creating New Save");
         }
     }
 

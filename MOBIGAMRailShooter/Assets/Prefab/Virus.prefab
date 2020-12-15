@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6414276245727068684}
   - component: {fileID: 8201962149647219526}
   - component: {fileID: 4681073171725082578}
-  m_Layer: 0
+  - component: {fileID: 1597800187967633593}
+  m_Layer: 9
   m_Name: Virus Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2860411646283075895}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6841752543965802715}
@@ -79,6 +80,25 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!95 &1597800187967633593
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860411646283075895}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: de8c7137c40a4b848bd4319ead536a35, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4701721746531877970
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,7 +110,7 @@ GameObject:
   - component: {fileID: 6841752543965802715}
   - component: {fileID: 8435360553617025462}
   - component: {fileID: 5625573212935333643}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Virus
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -151,7 +171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5660186726878505312}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Virus Aim
   m_TagString: Untagged
   m_Icon: {fileID: 0}

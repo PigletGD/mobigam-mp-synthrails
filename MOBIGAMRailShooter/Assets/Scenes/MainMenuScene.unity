@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3207,6 +3207,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531007281}
   m_CullTransparentMesh: 0
+--- !u!1 &617698324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 617698326}
+  - component: {fileID: 617698325}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &617698325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617698324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be64662a12658043aa2f86736149b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: MainMenuMusic
+    clip: {fileID: 8300000, guid: 511709d03a9e1a947aa33a3ed6df4129, type: 3}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+  - name: GameMusic
+    clip: {fileID: 8300000, guid: d1f5cae8f49b46942a949571dcd5085b, type: 3}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+  testValue: 0
+--- !u!4 &617698326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617698324}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5162779, y: 4.245494, z: 9.420998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &618369906
 GameObject:
   m_ObjectHideFlags: 0
@@ -4706,26 +4761,69 @@ MonoBehaviour:
   damage: {fileID: 698398394}
   ammo: {fileID: 105617624}
   healthUpgrades:
-  - upgradeCost: 1
-    upgradeDescription: 'Health I Cost: 1
+  - upgradeCost: 20
+    upgradeDescription: 'Health I Cost: 20
 
-      (Player Health: 3)'
+      (Current Health: 3)'
     upgradeValue: 1
-  - upgradeCost: 2
-    upgradeDescription: 'Health II Cost: 2
+  - upgradeCost: 50
+    upgradeDescription: 'Health II Cost: 50
 
-      (Player Health: 4)'
+      (Current Health: 4)'
+    upgradeValue: 1
+  - upgradeCost: 100
+    upgradeDescription: 'Health III Cost: 100
+
+      (Current Health: 5)'
     upgradeValue: 1
   speedUpgrades:
-  - upgradeCost: 69
-    upgradeDescription: Lmao
+  - upgradeCost: 20
+    upgradeDescription: 'Speed I Cost: 20
+
+      (Current Speed: 8)'
     upgradeValue: 3
-  damageUpgrades: []
-  ammoUpgrades: []
-  groupOne: {fileID: 0}
-  groupTwo: {fileID: 0}
-  groupThree: {fileID: 0}
-  groupFour: {fileID: 0}
+  - upgradeCost: 50
+    upgradeDescription: 'Speed II Cost: 50
+
+      (Current Speed: 11)'
+    upgradeValue: 3
+  - upgradeCost: 100
+    upgradeDescription: 'Speed III Cost: 100
+
+      (Current Speed: 14)'
+    upgradeValue: 3
+  damageUpgrades:
+  - upgradeCost: 20
+    upgradeDescription: 'Damage I Cost: 20
+
+      (Current Damage: 1)'
+    upgradeValue: 1
+  - upgradeCost: 50
+    upgradeDescription: 'Damage II Cost: 50
+
+      (Current Damage: 2)'
+    upgradeValue: 1
+  - upgradeCost: 100
+    upgradeDescription: 'Damage III Cost: 100
+
+      (Current Damage: 3)'
+    upgradeValue: 1
+  ammoUpgrades:
+  - upgradeCost: 20
+    upgradeDescription: 'Ammo I Cost: 20
+
+      (Current Ammo: 30)'
+    upgradeValue: 10
+  - upgradeCost: 50
+    upgradeDescription: 'Ammo II Cost: 50
+
+      (Current Ammo: 40)'
+    upgradeValue: 10
+  - upgradeCost: 100
+    upgradeDescription: 'Ammo I Cost: 100
+
+      (Current Ammo: 50)'
+    upgradeValue: 10
 --- !u!1 &1123503032
 GameObject:
   m_ObjectHideFlags: 0

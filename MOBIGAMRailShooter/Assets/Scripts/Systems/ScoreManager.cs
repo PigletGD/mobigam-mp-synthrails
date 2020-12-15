@@ -10,6 +10,8 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] Text portraitText = null;
     [SerializeField] Text landscapeText = null;
 
+    public int moneyCollected = 0;
+
     public void AddScore(int value)
     {
         score += value;
@@ -17,4 +19,6 @@ public class ScoreManager : MonoBehaviour
         portraitText.text = "SCORE: " + score.ToString();
         landscapeText.text = "SCORE: " + score.ToString();
     }
+
+    public void AddMoney() => moneyCollected++;
 }

@@ -7,6 +7,11 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private GameObject titlePanel = null;
     [SerializeField] private GameObject menuPanel = null;
 
+    private void Awake()
+    {
+        AudioManager.Instance.PlayLoop("MainMenuMusic");
+    }
+
     public void PlayGame()
     {
         menuPanel.SetActive(true);
