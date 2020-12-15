@@ -45,7 +45,7 @@ public class WaveManager : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (timer > 1.0f)
+        if (timer > 300.0f)
             isBossTime = true;
 
         if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
