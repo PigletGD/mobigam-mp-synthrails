@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
@@ -21,6 +18,10 @@ public class SaveManager : MonoBehaviour
         }
         else Destroy(gameObject);
     }
+
+    private void OnApplicationPause() => Save();
+
+    private void OnApplicationQuit() => Save();
 
     // Save whole state of this saveState script to player pref
     public void Save()

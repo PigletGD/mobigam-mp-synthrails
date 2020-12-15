@@ -14,6 +14,10 @@ public class PlayerShooting : MonoBehaviour
 
     private bool currentlyDragging = false;
 
+    [SerializeField] private GameHUD gameHUD;
+
+    private bool spentAmmo = false;
+
     private void Start()
     {
         ownerTransform = transform;
@@ -39,28 +43,63 @@ public class PlayerShooting : MonoBehaviour
     private void OnTap(object sender, TapEventArgs e)
     {
         InitializeBullet();
-        AdjustPosition();
-        Fire();
+        if (spentAmmo)
+        {
+            AdjustPosition();
+            Fire();
+        }
     }
 
     private void OnDragging(object sender, DragEventArgs e)
     {
         if (!currentlyDragging)
             InitializeBullet();
-        AdjustPosition();
+        if (spentAmmo) AdjustPosition();
     }
 
     private void OnDragRelease(object sender, DragEventArgs e)
     {
-        Fire();
+        if (spentAmmo) Fire();
     }
 
     private void InitializeBullet()
     {
-        bullet = bulletPool.RetrieveObject();
+        spentAmmo = false;
 
-        BulletBehaviour BO = bullet.GetComponent<BulletBehaviour>();
-        BO.InitializeType(playerInfo.playerType);
+        switch (playerInfo.playerType)
+        {
+            case EntityType.RED:
+                if (playerInfo.ammoRed > 0)
+                {
+                    playerInfo.ammoRed--;
+                    spentAmmo = true;
+                }
+                break;
+            case EntityType.GREEN:
+                if (playerInfo.ammoGreen > 0)
+                {
+                    playerInfo.ammoGreen--;
+                    spentAmmo = true;
+                }
+                break;
+            case EntityType.BLUE:
+                if (playerInfo.ammoBlue > 0)
+                {
+                    playerInfo.ammoBlue--;
+                    spentAmmo = true;
+                }
+                break;
+        }
+
+        if (spentAmmo)
+        {
+            gameHUD.UpdateAmmo();
+
+            bullet = bulletPool.RetrieveObject();
+
+            BulletBehaviour BO = bullet.GetComponent<BulletBehaviour>();
+            BO.InitializeType(playerInfo.playerType);
+        }
 
         currentlyDragging = true;
     }

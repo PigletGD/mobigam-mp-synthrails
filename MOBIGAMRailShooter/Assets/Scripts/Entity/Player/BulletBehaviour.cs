@@ -17,9 +17,13 @@ public class BulletBehaviour : MonoBehaviour
     private float scaleTime = 1.0f;
     private float scaleTick = 0;
 
+    private bool fullyCharged = false;
+
     [SerializeField] private Vector3 rotationVector = Vector3.zero;
 
     [SerializeField] private Transform childTransform = null;
+
+    [SerializeField] private Rigidbody RB;
 
     private void Awake()
     {
@@ -38,9 +42,42 @@ public class BulletBehaviour : MonoBehaviour
 
             scaleTick += Time.deltaTime;
             if (scaleTick > scaleTime)
+            {
                 scaleTick = scaleTime;
+                fullyCharged = true;
+            }
 
             childTransform.rotation *= Quaternion.Euler(rotationVector * scaleValue);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            EnemyBehaviour EB = collision.gameObject.GetComponent<EnemyBehaviour>();
+            if(EB.weaknessType == bulletType)
+                EB.TakeDamage(SaveManager.Instance.state.bulletDamage);
+
+            StopAllCoroutines();
+
+            ownerTransform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            scaleTick = 0.0f;
+            hasLaunched = false;
+
+            gameObject.SetActive(false);
+        }
+        else if (collision.gameObject.tag == "Player")
+        {
+            collision.gameObject.GetComponent<PlayerInfo>().TakeDamage(1);
+
+            StopAllCoroutines();
+
+            ownerTransform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            scaleTick = 0.0f;
+            hasLaunched = false;
+
+            gameObject.SetActive(false);
         }
     }
 
@@ -76,7 +113,7 @@ public class BulletBehaviour : MonoBehaviour
         {
             tick += Time.deltaTime;
 
-            ownerTransform.position += ownerTransform.forward * speed * Time.deltaTime;
+            RB.MovePosition(ownerTransform.position + (ownerTransform.forward * speed * Time.deltaTime));
             childTransform.rotation *= Quaternion.Euler(rotationVector);
 
             yield return null;

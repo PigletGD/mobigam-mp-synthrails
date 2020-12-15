@@ -7,6 +7,10 @@ public class PlayerInfo : MonoBehaviour
     public EntityType playerType = EntityType.RED;
     public int health = 3;
     public float movementSpeed = 10;
+    public int ammoRed = 20;
+    public int ammoGreen = 20;
+    public int ammoBlue = 20;
+
 
     public TouchPanel touchPanel;
 
@@ -28,6 +32,14 @@ public class PlayerInfo : MonoBehaviour
     private void Start()
     {
         touchPanel.OnSwipe += OnSwipe;
+
+        SaveState saveState = SaveManager.Instance.state;
+
+        health = saveState.maxHealth;
+        movementSpeed = saveState.movementSpeed;
+        ammoRed = saveState.ammoCapacity;
+        ammoBlue = saveState.ammoCapacity;
+        ammoGreen = saveState.ammoCapacity;
     }
 
     private void Update()
@@ -90,4 +102,14 @@ public class PlayerInfo : MonoBehaviour
 
         transitioningColor = true;
     }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+            Debug.Log("Dead");
+    }
+
+
 }

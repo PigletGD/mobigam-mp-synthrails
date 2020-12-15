@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,22 +26,58 @@ public class PlayerMovement : MonoBehaviour
     private bool isRolling = false;
     private float rollTick = 0.3f;
 
+    private float initialZ;
+
+    private float portraitHeight;
+    private Vector3 initialPlayerPoint;
+
+    private bool isLandscape = false;
+
     // Start is called before the first frame update
     void Start()
     {
         ownerTransform = transform;
+
+        initialZ = ownerTransform.position.z;
 
         if (SystemInfo.supportsGyroscope) Input.gyro.enabled = true;
         else Debug.LogError("No Gyroscope in Device");
 
         touchPanel.OnDragging += OnDragging;
         touchPanel.OnDragRelease += OnDragRelease;
+
+        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        {
+            portraitHeight = (Screen.width * Screen.width) / Screen.height;
+            portraitHeight = portraitHeight / Screen.height;
+
+            isLandscape = false;
+        }
+        else
+        {
+            portraitHeight = (Screen.height * Screen.height) / Screen.width;
+            portraitHeight = portraitHeight / Screen.width;
+
+            isLandscape = true;
+        }
+
+        initialPlayerPoint = Camera.main.WorldToViewportPoint(ownerTransform.position);
+        initialPlayerPoint.x = Mathf.Clamp01(initialPlayerPoint.x);
+        initialPlayerPoint.y = Mathf.Clamp01(initialPlayerPoint.y);
     }
 
     private void OnDisable()
     {
         touchPanel.OnDragging -= OnDragging;
         touchPanel.OnDragRelease -= OnDragRelease;
+    }
+
+    private void Update()
+    {
+        if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
+            isLandscape = false;
+        else if ((Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeRight) && !isLandscape)
+            isLandscape = true;
     }
 
     // Update is called once per frame
@@ -96,7 +133,16 @@ public class PlayerMovement : MonoBehaviour
         pos.x = Mathf.Clamp01(pos.x);
         pos.y = Mathf.Clamp01(pos.y);
 
+        if(!isLandscape)
+            pos.y = Mathf.Clamp(pos.y, initialPlayerPoint.y - (portraitHeight * 0.5f), initialPlayerPoint.y + (portraitHeight * 0.5f));
+
         ownerTransform.position = Camera.main.ViewportToWorldPoint(pos);
+
+        float bounds = -5.5f;
+        if (ownerTransform.position.y < bounds)
+            ownerTransform.position = new Vector3(ownerTransform.position.x, bounds, initialZ);
+        else
+            ownerTransform.position = new Vector3(ownerTransform.position.x, ownerTransform.position.y, initialZ);
     }
 
     private void RotationLook(float h, float v)
