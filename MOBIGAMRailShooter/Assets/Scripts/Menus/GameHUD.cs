@@ -12,8 +12,6 @@ public class GameHUD : MonoBehaviour
     [SerializeField] private List<GameObject> heartsL = null;
     [SerializeField] private List<GameObject> heartsP = null;
 
-    private bool isLandscape = false;
-
     [SerializeField] private PlayerInfo playerInfo = null;
 
     [SerializeField] Image redAmmoL = null;
@@ -41,20 +39,7 @@ public class GameHUD : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-        {
-            portraitUI.SetActive(true);
-            landscapeUI.SetActive(false);
-
-            isLandscape = false;
-        }
-        else
-        {
-            portraitUI.SetActive(false);
-            landscapeUI.SetActive(true);
-
-            isLandscape = true;
-        }
+        ChangeHUD();
 
         int heartsToRemove = heartsL.Count - SaveManager.Instance.state.maxHealth;
 
@@ -64,22 +49,17 @@ public class GameHUD : MonoBehaviour
         UpdateAmmo();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeHUD()
     {
-        if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
+        if (!OrientationManager.Instance.isLandscape)
         {
             portraitUI.SetActive(true);
             landscapeUI.SetActive(false);
-
-            isLandscape = false;
         }
-        else if ((Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeRight) && !isLandscape)
+        else
         {
             portraitUI.SetActive(false);
             landscapeUI.SetActive(true);
-
-            isLandscape = true;
         }
     }
 
@@ -172,20 +152,29 @@ public class GameHUD : MonoBehaviour
 
     public void PlayAgain()
     {
+        Time.timeScale = 1;
         AudioManager.Instance.Stop("GameMusic");
         SceneManager.LoadScene("GameScene");
     }
 
     public void GoToMainMenu()
     {
+        Time.timeScale = 1;
         AudioManager.Instance.Stop("GameMusic");
         SceneManager.LoadScene("MainMenuScene");
     }
 
     public void LevelComplete()
     {
+        Time.timeScale = 0;
         bossDefeated = true;
-        SaveManager.Instance.state.unlockedLevelTwo = true;
+
+        switch (SaveManager.Instance.currentLevel)
+        {
+            case 1: SaveManager.Instance.state.unlockedLevelTwo = true; break;
+            case 2: SaveManager.Instance.state.unlockedLevelThree = true; break;
+        }
+
         DisplayResults();
     }
 }

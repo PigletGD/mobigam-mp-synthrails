@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraOrienter : MonoBehaviour
 {
-    private bool isLandscape = false;
     private float landscapeFOV = 60;
     private float portraitFOV;
 
@@ -12,36 +9,18 @@ public class CameraOrienter : MonoBehaviour
 
     private void Start()
     {
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        if (!OrientationManager.Instance.isLandscape)
         {
             portraitFOV = (Screen.height * landscapeFOV) / Screen.width;
 
             cam.fieldOfView = portraitFOV;
-
-            isLandscape = false;
         }
-        else
-        {
-            portraitFOV = (Screen.width * landscapeFOV) / Screen.height;
-
-            isLandscape = true;
-        }
+        else portraitFOV = (Screen.width * landscapeFOV) / Screen.height;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeFOV()
     {
-        if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
-        {
-            cam.fieldOfView = portraitFOV;
-
-            isLandscape = false;
-        }
-        else if ((Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeRight) && !isLandscape)
-        {
-            cam.fieldOfView = landscapeFOV;
-
-            isLandscape = true;
-        }
+        if (!OrientationManager.Instance.isLandscape) cam.fieldOfView = portraitFOV;
+        else cam.fieldOfView = landscapeFOV;
     }
 }

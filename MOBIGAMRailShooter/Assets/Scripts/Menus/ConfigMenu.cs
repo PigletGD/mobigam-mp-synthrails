@@ -29,6 +29,8 @@ public class ConfigMenu : MonoBehaviour
 
         intervalTime.text = newValue.ToString() + " mins";
         SaveManager.Instance.state.notificationInterval = newValue;
+
+        NotificationHandler.Instance.ResetRepeatScheduleNotif();
     }
 
     public void UnlockAllLevels()

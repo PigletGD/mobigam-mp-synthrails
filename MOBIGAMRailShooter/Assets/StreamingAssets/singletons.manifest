@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 13816193
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cf22befebc06914d7e8a9ba6315fa16f
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 27295f96fcdc2b917bd061e8817c7e02
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+Assets:
+- Assets/Prefabs/Singletons/P_AudioManager.prefab
+- Assets/Prefabs/Singletons/P_SaveManager.prefab
+- Assets/Prefabs/Singletons/P_OrientationManager.prefab
+- Assets/Prefabs/Singletons/P_NotificationHandler.prefab
+Dependencies: []

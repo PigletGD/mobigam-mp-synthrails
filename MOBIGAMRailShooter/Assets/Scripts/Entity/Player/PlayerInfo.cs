@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour
 {
@@ -19,13 +17,14 @@ public class PlayerInfo : MonoBehaviour
     private float currentLerpTime = 0.0f;
     private float lerpTime = 0.1f;
     private bool transitioningColor = false;
+    private float invincibilityTime = 0.5f;
+    private float currentInvincibilityTime = 0.75f;
 
     [SerializeField] ObjectPool explosionPool = null;
 
     [SerializeField] GameHUD gameHUD = null;
 
     [SerializeField] GameEventsSO onPlayerDeath = null;
-
     private void Awake()
     {
         MR = GetComponentInChildren<MeshRenderer>();
@@ -51,6 +50,9 @@ public class PlayerInfo : MonoBehaviour
 
     private void Update()
     {
+        if (currentInvincibilityTime < invincibilityTime)
+            currentInvincibilityTime += Time.deltaTime;
+
         if (transitioningColor)
         {
             currentLerpTime += Time.deltaTime;
@@ -112,9 +114,13 @@ public class PlayerInfo : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (SaveManager.Instance.state.invincibilityOn || currentInvincibilityTime < invincibilityTime) return;
+
         health -= damage;
 
         gameHUD.RemoveHeart();
+
+        currentInvincibilityTime = 0;
 
         if (health <= 0)
             Die();

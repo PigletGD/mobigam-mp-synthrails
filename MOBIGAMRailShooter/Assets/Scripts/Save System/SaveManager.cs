@@ -5,6 +5,8 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { set; get; }
     public SaveState state;
 
+    public int currentLevel = 0;
+
     // Start is called before the first frame update
     void Awake()
     {

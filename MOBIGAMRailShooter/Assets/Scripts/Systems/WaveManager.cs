@@ -1,11 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
     [SerializeField] ObjectPool virusPool = null;
     [SerializeField] ObjectPool moneyPool = null;
+    [SerializeField] ObjectPool verticalWallPool = null;
+    [SerializeField] ObjectPool horizontalWallPool = null;
     [SerializeField] GameObject boss = null;
 
     bool isBossTime = false;
@@ -16,28 +17,26 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField] Camera cam = null;
 
-    private bool isLandscape = false;
-
-    private float portraitHeight = 0;
     private void Start()
     {
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        switch (SaveManager.Instance.currentLevel)
         {
-            portraitHeight = (Screen.width * Screen.width) / Screen.height;
-            portraitHeight = portraitHeight / Screen.height;
-
-            isLandscape = false;
+            case 1:
+                StartCoroutine("SpawnEnemiesEndless");
+                StartCoroutine("SpawnMoney");
+                break;
+            case 2:
+                StartCoroutine("SpawnHorizontalWalls");
+                StartCoroutine("SpawnVerticalWalls");
+                StartCoroutine("SpawnMoney");
+                break;
+            case 3:
+                StartCoroutine("SpawnEnemiesEndless");
+                StartCoroutine("SpawnHorizontalWalls");
+                StartCoroutine("SpawnVerticalWalls");
+                StartCoroutine("SpawnMoney");
+                break;
         }
-        else
-        {
-            portraitHeight = (Screen.height * Screen.height) / Screen.width;
-            portraitHeight = portraitHeight / Screen.width;
-
-            isLandscape = true;
-        }
-
-        StartCoroutine("SpawnEnemies");
-        StartCoroutine("SpawnMoney");
     }
 
     // Update is called once per frame
@@ -48,15 +47,65 @@ public class WaveManager : MonoBehaviour
         if (timer > 300.0f)
             isBossTime = true;
 
-        if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
-            isLandscape = false;
-        else if ((Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeRight) && !isLandscape)
-            isLandscape = true;
+        if (currentAmountOfEnemies <= 0 && isBossTime)
+        {
+            StopAllCoroutines();
+
+            SpawnBoss();
+        }
     }
 
-    IEnumerator SpawnEnemies()
+    IEnumerator SpawnVerticalWalls()
     {
         yield return new WaitForSeconds(3);
+
+        while (true)
+        {
+            Vector3 pos = cam.WorldToViewportPoint(new Vector3(0, 0, 15));
+            pos.x = Random.Range(0.35f, 0.65f);
+
+            /*if (!OrientationManager.Instance.isLandscape)
+            {
+                float portraitHeight = OrientationManager.Instance.portraitHeight;
+
+                pos.y = Mathf.Clamp(pos.y, ((Screen.height * 0.5f) - (portraitHeight * 0.5f)) / Screen.height, ((Screen.height * 0.5f) + (portraitHeight * 0.5f)) / Screen.height);
+            }*/
+
+            GameObject go = verticalWallPool.RetrieveObject();
+            float xLoc = cam.ViewportToWorldPoint(pos).x;
+            go.transform.position = new Vector3(xLoc, go.transform.position.y, go.transform.position.z);
+
+            yield return new WaitForSeconds(5);
+        }
+    }
+
+    IEnumerator SpawnHorizontalWalls()
+    {
+        yield return new WaitForSeconds(5.5f);
+
+        while (true)
+        {
+            Vector3 pos = cam.WorldToViewportPoint(new Vector3(0, 0, 15));
+            pos.y = Random.Range(0.35f, 0.65f);
+
+            if (!OrientationManager.Instance.isLandscape)
+            {
+                float portraitHeight = OrientationManager.Instance.portraitHeight;
+
+                pos.y = Mathf.Clamp(pos.y, ((Screen.height * 0.5f) - (portraitHeight * 0.5f)) / Screen.height, ((Screen.height * 0.5f) + (portraitHeight * 0.5f)) / Screen.height);
+            }
+
+            GameObject go = horizontalWallPool.RetrieveObject();
+            float yLoc = cam.ViewportToWorldPoint(pos).y;
+            go.transform.position = new Vector3(go.transform.position.x, yLoc, go.transform.position.z);
+
+            yield return new WaitForSeconds(5);
+        }
+    }
+
+    IEnumerator SpawnEnemiesEndless()
+    {
+        yield return new WaitForSeconds(3f);
 
         while (true)
         {
@@ -69,12 +118,17 @@ public class WaveManager : MonoBehaviour
                 {
                     yield return new WaitForSeconds(Random.Range(0.5f, 1.0f));
 
-                    Vector3 pos = cam.WorldToViewportPoint(new Vector3(0, 0, Random.Range(12.0f, 18.0f)));
+                    Vector3 pos = cam.WorldToViewportPoint(new Vector3(0, 0, 15));
                     pos.x = Random.Range(0.1f, 0.9f);
                     pos.y = Random.Range(0.4f, 0.9f);
 
-                    if (!isLandscape)
+                    if (!OrientationManager.Instance.isLandscape)
+                    {
+                        float portraitHeight = OrientationManager.Instance.portraitHeight;
+
                         pos.y = Mathf.Clamp(pos.y, ((Screen.height * 0.5f) - (portraitHeight * 0.5f)) / Screen.height, ((Screen.height * 0.5f) + (portraitHeight * 0.5f)) / Screen.height);
+                    }
+                        
 
                     GameObject go = virusPool.RetrieveObject();
                     go.transform.position = cam.ViewportToWorldPoint(pos);
@@ -97,8 +151,12 @@ public class WaveManager : MonoBehaviour
             pos.x = Random.Range(0.25f, 0.75f);
             pos.y = Random.Range(0.5f, 0.8f);
 
-            if (!isLandscape)
+            if (!OrientationManager.Instance.isLandscape)
+            {
+                float portraitHeight = OrientationManager.Instance.portraitHeight;
+
                 pos.y = Mathf.Clamp(pos.y, ((Screen.height * 0.5f) - (portraitHeight * 0.5f)) / Screen.height, ((Screen.height * 0.5f) + (portraitHeight * 0.5f)) / Screen.height);
+            }
 
             GameObject go = moneyPool.RetrieveObject();
             go.transform.position = cam.ViewportToWorldPoint(pos);
@@ -116,12 +174,5 @@ public class WaveManager : MonoBehaviour
     public void DecreaseEnemyCount()
     {
         currentAmountOfEnemies -= 1;
-
-        if (currentAmountOfEnemies <= 0 && isBossTime)
-        {
-            StopAllCoroutines();
-
-            SpawnBoss();
-        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -31,8 +29,6 @@ public class PlayerMovement : MonoBehaviour
     private float portraitHeight = 0;
     private Vector3 initialPlayerPoint = Vector3.zero;
 
-    private bool isLandscape = false;
-
     [SerializeField] private Animator playerAnim = null;
 
     // Start is called before the first frame update
@@ -48,19 +44,15 @@ public class PlayerMovement : MonoBehaviour
         touchPanel.OnDragging += OnDragging;
         touchPanel.OnDragRelease += OnDragRelease;
 
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+        if (!OrientationManager.Instance.isLandscape)
         {
             portraitHeight = (Screen.width * Screen.width) / Screen.height;
             portraitHeight = portraitHeight / Screen.height;
-
-            isLandscape = false;
         }
         else
         {
             portraitHeight = (Screen.height * Screen.height) / Screen.width;
             portraitHeight = portraitHeight / Screen.width;
-
-            isLandscape = true;
         }
 
         initialPlayerPoint = Camera.main.WorldToViewportPoint(ownerTransform.position);
@@ -72,14 +64,6 @@ public class PlayerMovement : MonoBehaviour
     {
         touchPanel.OnDragging -= OnDragging;
         touchPanel.OnDragRelease -= OnDragRelease;
-    }
-
-    private void Update()
-    {
-        if ((Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown) && isLandscape)
-            isLandscape = false;
-        else if ((Screen.orientation == ScreenOrientation.Landscape || Screen.orientation == ScreenOrientation.LandscapeRight) && !isLandscape)
-            isLandscape = true;
     }
 
     // Update is called once per frame
@@ -135,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
         pos.x = Mathf.Clamp01(pos.x);
         pos.y = Mathf.Clamp01(pos.y);
 
-        if(!isLandscape)
+        if(!OrientationManager.Instance.isLandscape)
             pos.y = Mathf.Clamp(pos.y, initialPlayerPoint.y - (portraitHeight * 0.5f), initialPlayerPoint.y + (portraitHeight * 0.5f));
 
         ownerTransform.position = Camera.main.ViewportToWorldPoint(pos);

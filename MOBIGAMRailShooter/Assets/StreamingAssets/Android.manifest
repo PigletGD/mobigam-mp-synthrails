@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3338270206
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: singletons
+      Dependencies: {}

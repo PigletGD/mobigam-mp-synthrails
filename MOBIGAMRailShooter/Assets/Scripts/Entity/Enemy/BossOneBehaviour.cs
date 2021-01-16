@@ -47,7 +47,12 @@ public class BossOneBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
-        health = maxHealth;
+        switch (SaveManager.Instance.currentLevel)
+        {
+            case 1: health = maxHealth; break;
+            case 2: health = (maxHealth * 3) / 2; break;
+            case 3: health = maxHealth * 2; break;
+        }
 
         StartCoroutine(Shooting(1, 1));
     }
