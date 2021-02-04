@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class TitleMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject titlePanel = null;
-    [SerializeField] private GameObject menuPanel = null;
+    public GameObject titlePanel = null;
+    public GameObject menuPanel = null;
 
     private void Awake()
     {
+        titlePanel = gameObject;
         AudioManager.Instance.PlayLoop("MainMenuMusic");
     }
 

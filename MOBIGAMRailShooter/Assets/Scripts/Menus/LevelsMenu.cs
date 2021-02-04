@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class LevelsMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject levelTwo = null;
-    [SerializeField] private GameObject levelThree = null;
+    public GameObject levelTwo = null;
+    public GameObject levelThree = null;
 
     private void OnEnable()
     {

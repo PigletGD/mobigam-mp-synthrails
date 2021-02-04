@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 13816193
+CRC: 3751713187
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: cf22befebc06914d7e8a9ba6315fa16f
+    Hash: 4abc75c89241c2e22cfe04d43eb75a8a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 27295f96fcdc2b917bd061e8817c7e02
@@ -14,6 +14,8 @@ ClassTypes:
 - Class: 4
   Script: {instanceID: 0}
 Assets:
+- Assets/Prefabs/Singletons/P_FBManager.prefab
+- Assets/Prefabs/Singletons/P_AdsManager.prefab
 - Assets/Prefabs/Singletons/P_AudioManager.prefab
 - Assets/Prefabs/Singletons/P_SaveManager.prefab
 - Assets/Prefabs/Singletons/P_OrientationManager.prefab

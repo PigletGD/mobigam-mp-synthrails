@@ -3,19 +3,20 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField] ObjectPool virusPool = null;
-    [SerializeField] ObjectPool moneyPool = null;
-    [SerializeField] ObjectPool verticalWallPool = null;
-    [SerializeField] ObjectPool horizontalWallPool = null;
-    [SerializeField] GameObject boss = null;
+    public ObjectPool virusPool = null;
+    public ObjectPool moneyPool = null;
+    public ObjectPool verticalWallPool = null;
+    public ObjectPool horizontalWallPool = null;
+    public GameObject boss = null;
 
     bool isBossTime = false;
+    bool spawnedBoss = false;
 
     private float timer = 0.0f;
 
     private int currentAmountOfEnemies = 0;
 
-    [SerializeField] Camera cam = null;
+    public Camera cam = null;
 
     private void Start()
     {
@@ -47,7 +48,7 @@ public class WaveManager : MonoBehaviour
         if (timer > 300.0f)
             isBossTime = true;
 
-        if (currentAmountOfEnemies <= 0 && isBossTime)
+        if (currentAmountOfEnemies <= 0 && isBossTime && !spawnedBoss)
         {
             StopAllCoroutines();
 
@@ -169,6 +170,7 @@ public class WaveManager : MonoBehaviour
     private void SpawnBoss()
     {
         Instantiate(boss, new Vector3(0, 8, 40), boss.transform.rotation);
+        spawnedBoss = true;
     }
 
     public void DecreaseEnemyCount()

@@ -9,6 +9,8 @@
 /MOBIGAMRailShooter/[Bb]uilds/
 /MOBIGAMRailShooter/[Ll]ogs/
 /MOBIGAMRailShooter/[Mm]emoryCaptures/
+/MOBIGAMRailShooter/[Aa]ssetBundles
+/MOBIGAMRailShooter/[Aa]ssets/[Ss]treamingAssets
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/MOBIGAMRailShooter/[Aa]ssets/**/*.meta

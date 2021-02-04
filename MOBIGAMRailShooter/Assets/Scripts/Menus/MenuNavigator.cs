@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class MenuNavigator : MonoBehaviour
 {
-    [SerializeField] private GameObject levelMenu = null;
-    [SerializeField] private GameObject shopMenu = null;
-    [SerializeField] private GameObject configMenu = null;
+    public GameObject levelMenu = null;
+    public GameObject shopMenu = null;
+    public GameObject configMenu = null;
 
     private string currentText = null;
-    [SerializeField] private Text buttonOne = null;
-    [SerializeField] private Text buttonTwo = null;
+    public Text buttonOne = null;
+    public Text buttonTwo = null;
 
     private GameObject currentMenu = null;
     private GameObject menuButtonOne = null;

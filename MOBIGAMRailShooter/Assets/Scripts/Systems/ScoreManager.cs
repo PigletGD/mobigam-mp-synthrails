@@ -5,8 +5,8 @@ public class ScoreManager : MonoBehaviour
 {
     public int score = 0;
 
-    [SerializeField] Text portraitText = null;
-    [SerializeField] Text landscapeText = null;
+    public Text portraitText = null;
+    public Text landscapeText = null;
 
     public int moneyCollected = 0;
 

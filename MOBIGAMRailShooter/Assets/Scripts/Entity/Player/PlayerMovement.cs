@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public PlayerInfo playerInfo = null;
     public float moveSpeed = 10;
     public float lookSpeed = 340;
-    public float targetDepth = 5;
+    public float targetDepth = 1;
 
     Vector3 previousVector = Vector3.zero;
 
@@ -29,7 +29,9 @@ public class PlayerMovement : MonoBehaviour
     private float portraitHeight = 0;
     private Vector3 initialPlayerPoint = Vector3.zero;
 
-    [SerializeField] private Animator playerAnim = null;
+    public Animator playerAnim = null;
+
+    private Camera mainCam = null;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (SystemInfo.supportsGyroscope) Input.gyro.enabled = true;
         else Debug.LogError("No Gyroscope in Device");
+
+        Debug.Log(touchPanel.gameObject.activeInHierarchy);
 
         touchPanel.OnDragging += OnDragging;
         touchPanel.OnDragRelease += OnDragRelease;
@@ -55,9 +59,14 @@ public class PlayerMovement : MonoBehaviour
             portraitHeight = portraitHeight / Screen.width;
         }
 
-        initialPlayerPoint = Camera.main.WorldToViewportPoint(ownerTransform.position);
-        initialPlayerPoint.x = Mathf.Clamp01(initialPlayerPoint.x);
-        initialPlayerPoint.y = Mathf.Clamp01(initialPlayerPoint.y);
+
+        mainCam = Camera.main;
+        if (mainCam != null)
+        {
+            initialPlayerPoint = mainCam.WorldToViewportPoint(ownerTransform.position);
+            initialPlayerPoint.x = Mathf.Clamp01(initialPlayerPoint.x);
+            initialPlayerPoint.y = Mathf.Clamp01(initialPlayerPoint.y);
+        }
     }
 
     private void OnDisable()
@@ -69,27 +78,41 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float h = moveJoystick.JoystickVector.x;
-        float v = moveJoystick.JoystickVector.y;
-
-        if (!isRolling)
+        if (mainCam != null)
         {
-            LocalMove(h, v);
-            ClampPosition();
+            float h = moveJoystick.JoystickVector.x;
+            float v = moveJoystick.JoystickVector.y;
 
-            if (SystemInfo.supportsGyroscope)
+            if (!isRolling)
             {
-                Vector3 rot = Input.gyro.rotationRate;
+                LocalMove(h, v);
+                ClampPosition();
 
-                if (rot.z <= -2.0f) StartCoroutine(BarrelRoll(new Vector3(1.0f, 0.0f, 0.0f)));
-                else if (rot.z >= 2.0f) StartCoroutine(BarrelRoll(new Vector3(-1.0f, 0.0f, 0.0f)));
+                if (SystemInfo.supportsGyroscope)
+                {
+                    Vector3 rot = Input.gyro.rotationRate;
+
+                    if (rot.z <= -2.0f) StartCoroutine(BarrelRoll(new Vector3(1.0f, 0.0f, 0.0f)));
+                    else if (rot.z >= 2.0f) StartCoroutine(BarrelRoll(new Vector3(-1.0f, 0.0f, 0.0f)));
+                }
+            }
+
+            if (!currentlyDragging)
+            {
+                RotationLook(h, v);
+                HorizontalLean(planeModelTransform, h, 80, 0.1f);
             }
         }
-
-        if (!currentlyDragging)
+        else
         {
-            RotationLook(h, v);
-            HorizontalLean(planeModelTransform, h, 80, 0.1f);
+            mainCam = Camera.main;
+            
+            if (mainCam != null)
+            {
+                initialPlayerPoint = mainCam.WorldToViewportPoint(ownerTransform.position);
+                initialPlayerPoint.x = Mathf.Clamp01(initialPlayerPoint.x);
+                initialPlayerPoint.y = Mathf.Clamp01(initialPlayerPoint.y);
+            }
         }
     }
 
@@ -115,14 +138,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void ClampPosition()
     {
-        Vector3 pos = Camera.main.WorldToViewportPoint(ownerTransform.position);
+        Vector3 pos = mainCam.WorldToViewportPoint(ownerTransform.position);
         pos.x = Mathf.Clamp01(pos.x);
         pos.y = Mathf.Clamp01(pos.y);
 
-        if(!OrientationManager.Instance.isLandscape)
+        if (!OrientationManager.Instance.isLandscape)
+        {
             pos.y = Mathf.Clamp(pos.y, initialPlayerPoint.y - (portraitHeight * 0.5f), initialPlayerPoint.y + (portraitHeight * 0.5f));
+        }
 
-        ownerTransform.position = Camera.main.ViewportToWorldPoint(pos);
+        ownerTransform.position = mainCam.ViewportToWorldPoint(pos);
 
         float bounds = -5.5f;
         if (ownerTransform.position.y < bounds)

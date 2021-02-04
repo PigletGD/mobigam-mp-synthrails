@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BulletBehaviour : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
+    [SerializeField] private float speed = 20;
 
     public EntityType bulletType = EntityType.NONE;
 
@@ -20,11 +20,10 @@ public class BulletBehaviour : MonoBehaviour
 
     private bool fullyCharged = false;
 
-    [SerializeField] private Vector3 rotationVector = Vector3.zero;
+    [SerializeField] private Vector3 rotationVector = new Vector3(4, 20, 12);
 
-    [SerializeField] private Transform childTransform = null;
-
-    [SerializeField] private Rigidbody RB = null;
+    public Transform childTransform = null;
+    public Rigidbody RB = null;
 
     private void Awake()
     {

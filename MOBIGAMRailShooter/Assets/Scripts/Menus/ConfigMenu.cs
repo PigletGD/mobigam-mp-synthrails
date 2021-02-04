@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class ConfigMenu : MonoBehaviour
 {
-    [SerializeField] private Text intervalTime = null;
-    [SerializeField] private Slider intervalSlider = null;
-
-    [SerializeField] private InputField currencyInputField = null;
-
-    [SerializeField] private Text invincibility = null;
+    public Text intervalTime = null;
+    public Slider intervalSlider = null;
+    public InputField currencyInputField = null;
+    public Text invincibility = null;
+    public Text playAdText = null;
+    public Text toggleAds = null;
 
     public void OnEnable()
     {
@@ -16,14 +16,21 @@ public class ConfigMenu : MonoBehaviour
             invincibility.text = "Disable Invincibility";
         else invincibility.text = "Enable Invincibility";
 
+        if (AdsManager.Instance.showAds)
+            toggleAds.text = "Disable Ads";
+        else toggleAds.text = "Enable Ads";
+
         int oldValue = SaveManager.Instance.state.notificationInterval;
         intervalSlider.value = oldValue;
         intervalTime.text = oldValue.ToString() + " mins";
     }
 
-    public void GenerateNotification() => Debug.Log("Generates Notification once Notification System is Implemented");
+    public void GenerateNotification()
+    {
+        NotificationHandler.Instance.SendSimpleNotif("Notification", "This notification was sent after 10 seconds", 10f);
+    }
 
-    public void SetNotificationIntervalTime()
+    public void SetNotificationIntervalTime(System.Single num)
     {
         int newValue = (int)intervalSlider.value;
 
@@ -54,6 +61,28 @@ public class ConfigMenu : MonoBehaviour
             invincibility.text = "Disable Invincibility";
         }
     }
+
+    public void PlayVideoAd()
+    {
+        if (AdsManager.Instance.showAds)
+            AdsManager.Instance.ShowInterstitialAd();
+        else Debug.Log("Ad can't be shown");
+    }
+
+    public void ToggleAds()
+    {
+        if (AdsManager.Instance.showAds)
+        {
+            AdsManager.Instance.showAds = false;
+            toggleAds.text = "Enable Ads";
+        }
+        else
+        {
+            AdsManager.Instance.showAds = true;
+            toggleAds.text = "Disable Ads";
+        }
+    }
+
 
     public void ResetProgress()
     {

@@ -1,39 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameHUD : MonoBehaviour
 {
-    [SerializeField] private GameObject portraitUI = null;
-    [SerializeField] private GameObject landscapeUI = null;
-
-    [SerializeField] private List<GameObject> heartsL = null;
-    [SerializeField] private List<GameObject> heartsP = null;
-
-    [SerializeField] private PlayerInfo playerInfo = null;
-
-    [SerializeField] Image redAmmoL = null;
-    [SerializeField] Image greenAmmoL = null;
-    [SerializeField] Image blueAmmoL = null;
-    [SerializeField] Image redAmmoP = null;
-    [SerializeField] Image greenAmmoP = null;
-    [SerializeField] Image blueAmmoP = null;
-
-    [SerializeField] Text redTextL = null;
-    [SerializeField] Text greenTextL = null;
-    [SerializeField] Text blueTextL = null;
-    [SerializeField] Text redTextP = null;
-    [SerializeField] Text greenTextP = null;
-    [SerializeField] Text blueTextP = null;
-
-    [SerializeField] GameObject resultsPanel = null;
-    [SerializeField] Text verdictText = null;
-    [SerializeField] Text resourceText = null;
-
-    [SerializeField] ScoreManager SM = null;
-
+    public GameObject portraitUI = null;
+    public GameObject landscapeUI = null;
+    public List<GameObject> heartsL = null;
+    public List<GameObject> heartsP = null;
+    public PlayerInfo playerInfo = null;
+    public Image redAmmoL = null;
+    public Image greenAmmoL = null;
+    public Image blueAmmoL = null;
+    public Image redAmmoP = null;
+    public Image greenAmmoP = null;
+    public Image blueAmmoP = null;
+    public Text redTextL = null;
+    public Text greenTextL = null;
+    public Text blueTextL = null;
+    public Text redTextP = null;
+    public Text greenTextP = null;
+    public Text blueTextP = null;
+    public GameObject resultsPanel = null;
+    public Text verdictText = null;
+    public Text resourceText = null;
+    public ScoreManager SM = null;
+    public GameObject playAdPanel = null;
+    public Button playAdButton = null;
+    public GameObject uploadPanel = null;
+    public Text uploadPanelText = null;
+    public Button okayButton = null;
+    public Button fbButton = null;
     private bool bossDefeated = false;
 
     // Start is called before the first frame update
@@ -47,6 +47,13 @@ public class GameHUD : MonoBehaviour
             RemoveHeart();
 
         UpdateAmmo();
+
+        AdsManager.Instance.OnAdDone += AdManager_OnAdDone;
+    }
+
+    private void OnDisable()
+    {
+        AdsManager.Instance.OnAdDone -= AdManager_OnAdDone;
     }
 
     public void ChangeHUD()
@@ -129,8 +136,8 @@ public class GameHUD : MonoBehaviour
         RectTransform RT = resultsPanel.GetComponent<RectTransform>();
         RT.sizeDelta = new Vector2(RT.sizeDelta.x, RT.sizeDelta.y) * 0.7f;
 
-        if (bossDefeated) verdictText.text = "LEVEL COMPLETE";
-        else verdictText.text = "GAME OVER";
+        if (bossDefeated) verdictText.text = "LEVEL " + SaveManager.Instance.currentLevel.ToString() + " COMPLETE";
+        else verdictText.text = "LEVEL " + SaveManager.Instance.currentLevel.ToString() + " GAME OVER";
 
         resourceText.text = "SCORE: " + SM.score.ToString() + "\nMONEY COLLECTED: " + SM.moneyCollected.ToString();
 
@@ -143,11 +150,15 @@ public class GameHUD : MonoBehaviour
 
     IEnumerator ShowResultScreen()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         portraitUI.SetActive(false);
         landscapeUI.SetActive(false);
         resultsPanel.SetActive(true);
+
+        Debug.Log("Pause");
+
+        Time.timeScale = 0;
     }
 
     public void PlayAgain()
@@ -166,7 +177,6 @@ public class GameHUD : MonoBehaviour
 
     public void LevelComplete()
     {
-        Time.timeScale = 0;
         bossDefeated = true;
 
         switch (SaveManager.Instance.currentLevel)
@@ -176,5 +186,37 @@ public class GameHUD : MonoBehaviour
         }
 
         DisplayResults();
+    }
+
+    public void SetActivePlayAd(bool value) => playAdPanel.SetActive(value);
+
+    public void SetActiveUploadPanel(bool value) => uploadPanel.SetActive(value);
+
+    private void AdManager_OnAdDone(object sender, AdFinishEventArgs e)
+    {
+        if (e.PlacementID == AdsManager.SampleRewardedAd)
+        {
+            switch (e.AdShowResult)
+            {
+                case ShowResult.Failed:
+                    Debug.Log("Ad failed");
+                    Text failText = playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>();
+                    failText.text = "Error: Ad failed. Try again?";
+                    break;
+                case ShowResult.Skipped:
+                    Debug.Log("Ad is skipped");
+                    Text skipText = playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>();
+                    skipText.text = "Error: Ad is skipped. Try again?";
+                    break;
+                case ShowResult.Finished: Debug.Log("Ad is finished properly");
+                    SaveManager.Instance.state.currency += 20;
+                    SaveManager.Instance.Save();
+                    int money = SM.moneyCollected + 20;
+                    resourceText.text = "SCORE: " + SM.score.ToString() + "\nMONEY COLLECTED: " + money.ToString();
+                    playAdButton.interactable = false;
+                    playAdPanel.SetActive(false);
+                    break;
+            }
+        }
     }
 }

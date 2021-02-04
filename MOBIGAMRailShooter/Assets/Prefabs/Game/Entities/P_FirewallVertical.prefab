@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3362352336123559684}
   - component: {fileID: 5018271274022155065}
   m_Layer: 0
-  m_Name: Firewall Vertical
+  m_Name: P_FirewallVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -236,8 +236,6 @@ GameObject:
   - component: {fileID: 2799353924976660060}
   - component: {fileID: 1012855596429768470}
   - component: {fileID: 4551970362540512130}
-  - component: {fileID: 2964425047556757740}
-  - component: {fileID: 2964425047556757715}
   - component: {fileID: 5777798895015727}
   - component: {fileID: 8632292088778554600}
   m_Layer: 0
@@ -287,7 +285,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cdb40b1e2367aa141a5ad422a97903ab, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -308,48 +306,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &2964425047556757740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372420773420359015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92be6594ccb2b33428ce6313c15148a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  warningRT: {fileID: 2964425046048768428}
-  canvas: {fileID: 2964425046288447556}
-  isVerticalWall: 1
---- !u!114 &2964425047556757715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372420773420359015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcdcc4acf44f07b44995c8dc3c26df6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: bfebb5b3ede3ac44985215bb50574027, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2964425047556757740}
-        m_MethodName: ChangeImageRectTransform
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!65 &5777798895015727
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -12,16 +12,16 @@ public struct Upgrade
 
 public class ShopMenu : MonoBehaviour
 {
-    [SerializeField] private Text currency = null;
-    [SerializeField] private Text health = null;
-    [SerializeField] private Text speed = null;
-    [SerializeField] private Text damage = null;
-    [SerializeField] private Text ammo = null;
+    public Text currency = null;
+    public Text health = null;
+    public Text speed = null;
+    public Text damage = null;
+    public Text ammo = null;
 
-    [SerializeField] private List<Upgrade> healthUpgrades = null;
-    [SerializeField] private List<Upgrade> speedUpgrades = null;
-    [SerializeField] private List<Upgrade> damageUpgrades = null;
-    [SerializeField] private List<Upgrade> ammoUpgrades = null;
+    public List<Upgrade> healthUpgrades = null;
+    public List<Upgrade> speedUpgrades = null;
+    public List<Upgrade> damageUpgrades = null;
+    public List<Upgrade> ammoUpgrades = null;
 
     bool isHealthMaxed = false;
     bool isSpeedMaxed = false;

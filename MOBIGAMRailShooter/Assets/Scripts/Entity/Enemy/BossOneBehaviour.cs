@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BossOneBehaviour : MonoBehaviour
 {
-    private int maxHealth = 100;
+    private int maxHealth = 30;
     private int health = 0;
 
     public EntityType enemyType = EntityType.NONE;
@@ -12,9 +12,9 @@ public class BossOneBehaviour : MonoBehaviour
 
     private MeshRenderer MR = null;
 
-    [SerializeField] GameEventsSO onBossDeath = null;
+    public GameEventsSO onBossDeath = null;
 
-    [SerializeField] Transform aimObject = null;
+    public Transform aimObject = null;
     private Transform player = null;
 
     private ObjectPool bulletPool = null;
@@ -28,13 +28,26 @@ public class BossOneBehaviour : MonoBehaviour
 
     private int currentIndexColor = -1;
 
-    [SerializeField] private Image healthBar = null;
+    public Image healthBar = null;
 
-    [SerializeField] private GameObject bossUI = null;
+    public GameObject bossUI = null;
 
     private void Awake()
     {
         MR = GetComponentInChildren<MeshRenderer>();
+        /*MR.sharedMaterial = BundleManager.Instance.GetAsset<Material>("materials", "Mat_Glow");
+        string shader = MR.sharedMaterial.shader.name;
+        MR.sharedMaterial.shader = Shader.Find(shader);*/
+
+        onBossDeath = BundleManager.Instance.GetAsset<GameEventsSO>("eventso", "EventSO_OnBossKilled");
+        aimObject = transform.GetChild(1);
+        healthBar = transform.GetChild(2).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>();
+        bossUI = transform.GetChild(2).GetChild(0).gameObject;
+        GameEventListener GEL = gameObject.AddComponent<GameEventListener>();
+        GEL.Event = BundleManager.Instance.GetAsset<GameEventsSO>("eventso", "EventSO_OnPlayerKilled");
+        GEL.Response = new UnityEngine.Events.UnityEvent();
+        GEL.Response.AddListener(DisableUI);
+        GEL.RegisterEvent();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -129,8 +142,6 @@ public class BossOneBehaviour : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
-
-        Debug.Log("Yeah");
 
         if (health <= 0)
             Die();

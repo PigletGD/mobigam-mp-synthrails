@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Firewall : MonoBehaviour
 {
-    [SerializeField] private RectTransform warningRT = null;
+    public RectTransform warningRT = null;
 
     private float portraitDistanceFromCenterVert = 0;
     private float landscapeDistanceFromCenterVert = 0;
@@ -18,15 +18,28 @@ public class Firewall : MonoBehaviour
     private Vector2 portraitImageSize = Vector2.zero;
     private Vector2 landscapeImageSize = Vector2.zero;
 
-    [SerializeField] RectTransform canvas = null;
-    [SerializeField] bool isVerticalWall = true;
+    public RectTransform canvas = null;
+    public bool isVerticalWall = true;
+
+    public Animator animator = null;
+
+    public Camera mainCam = null;
 
     private void Awake()
     {
-        referenceWorldPos = Camera.main.ScreenToWorldPoint(warningRT.anchoredPosition);
+        MeshRenderer MeshR = GetComponent<MeshRenderer>();
+        MeshR.sharedMaterial = BundleManager.Instance.GetAsset<Material>("materials", "Mat_Dissolve");
+        string shader = MeshR.sharedMaterial.shader.name;
+        MeshR.sharedMaterial.shader = Shader.Find(shader);
+
+        mainCam = Camera.main;
+        if (mainCam != null) 
+            referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
 
         landscapeImageSize = warningRT.rect.size;
         portraitImageSize = warningRT.rect.size * OrientationManager.Instance.uiPortraitSizeFactor;
+
+        animator = transform.parent.GetComponent<Animator>();
 
         if (isVerticalWall)
         {
@@ -48,15 +61,37 @@ public class Firewall : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam != null)
+                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
+        }
+    }
+
     // Start is called before the first frame update
     private void OnEnable()
     {
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam != null)
+                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
+        }
+
         Invoke("ExecuteBehaviour", 0.05f);
     }
 
     private void ExecuteBehaviour()
     {
-        ChangeImageRectTransform();
+        if (mainCam != null)
+        {
+            ChangeImageRectTransform();
+
+            if (animator == null) animator = transform.parent.GetComponent<Animator>();
+        }
 
         AudioManager.Instance.Play("Firewall");
 
@@ -69,7 +104,7 @@ public class Firewall : MonoBehaviour
 
         if (isVerticalWall)
         {
-            Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(parentTrans.position.x, referenceWorldPos.y, parentTrans.position.z));
+            Vector2 screenPoint = mainCam.WorldToScreenPoint(new Vector3(parentTrans.position.x, referenceWorldPos.y, parentTrans.position.z));
 
             xLoc = screenPoint.x - (float)Screen.width * 0.5f;
 
@@ -80,7 +115,7 @@ public class Firewall : MonoBehaviour
         }
         else
         {
-            Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(referenceWorldPos.x, parentTrans.position.y, parentTrans.position.z));
+            Vector2 screenPoint = mainCam.WorldToScreenPoint(new Vector3(referenceWorldPos.x, parentTrans.position.y, parentTrans.position.z));
 
             yLoc = screenPoint.y - (float)Screen.height * 0.5f;
 

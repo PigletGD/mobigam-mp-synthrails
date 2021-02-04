@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    [SerializeField] private GameObject poolableObject = null;
+    public GameObject poolableObject = null;
 
-    [SerializeField] private int initialObjectCapacity = 0;
+    public int initialObjectCapacity = 0;
     private int currentIndex = -1;
 
     private List<GameObject> objectPool = null;

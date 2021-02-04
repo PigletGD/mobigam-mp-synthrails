@@ -14,17 +14,22 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            foreach (Sound s in sounds)
-            {
-                s.source = gameObject.AddComponent<AudioSource>();
-                s.source.clip = s.clip;
-
-                s.source.volume = s.volume;
-                s.source.pitch = s.pitch;
-            }
         }
         else Destroy(gameObject);
+    }
+
+    public void InitializeSounds()
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+
+            s.source.playOnAwake = false;
+        }
     }
 
     public void Play (string name)

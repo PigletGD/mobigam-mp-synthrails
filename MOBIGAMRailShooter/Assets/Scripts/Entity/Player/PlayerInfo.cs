@@ -20,14 +20,17 @@ public class PlayerInfo : MonoBehaviour
     private float invincibilityTime = 0.5f;
     private float currentInvincibilityTime = 0.75f;
 
-    [SerializeField] ObjectPool explosionPool = null;
+    public ObjectPool explosionPool = null;
 
-    [SerializeField] GameHUD gameHUD = null;
+    public GameHUD gameHUD = null;
 
-    [SerializeField] GameEventsSO onPlayerDeath = null;
+    public GameEventsSO onPlayerDeath = null;
     private void Awake()
     {
         MR = GetComponentInChildren<MeshRenderer>();
+        /*MR.material = BundleManager.Instance.GetAsset<Material>("materials", "Mat_Ship");
+        string shader = MR.material.shader.name;
+        MR.material.shader = Shader.Find(shader);*/
 
         SetPlayerType(EntityType.RED);
         currentColor = Color.red;
@@ -130,6 +133,9 @@ public class PlayerInfo : MonoBehaviour
     {
         GameObject go = explosionPool.RetrieveObject();
         go.transform.position = transform.position;
+
+        GameObject crosshair = FindObjectOfType<Crosshair>().gameObject;
+        if (crosshair != null) crosshair.SetActive(false);
 
         gameHUD.DisplayResults();
 

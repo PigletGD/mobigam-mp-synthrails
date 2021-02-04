@@ -6,7 +6,7 @@ using UnityEngine;
 public class TapProperty
 {
     [Tooltip("Maximum allowable time until its not a tap anymore")]
-    public float tapTime = 0.7f;
+    public float tapTime = 0.4f;
     [Tooltip("Maximum allowable distance until its not a tap anymore")]
     public float tapMaxDistance = 0.1f;
 }

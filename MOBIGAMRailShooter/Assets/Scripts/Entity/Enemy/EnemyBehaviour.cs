@@ -10,9 +10,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     private MeshRenderer MR = null;
 
-    [SerializeField] GameEventsSO onEnemyDeath = null;
+    public GameEventsSO onEnemyDeath = null;
 
-    [SerializeField] Transform aimObject = null;
+    public Transform aimObject = null;
     private Transform player = null;
 
     private ObjectPool bulletPool = null;
@@ -21,6 +21,11 @@ public class EnemyBehaviour : MonoBehaviour
     private void Awake()
     {
         MR = GetComponentInChildren<MeshRenderer>();
+        /*MR.sharedMaterial = BundleManager.Instance.GetAsset<Material>("materials", "Mat_Glow");
+        string shader = MR.sharedMaterial.shader.name;
+        MR.sharedMaterial.shader = Shader.Find(shader);*/
+
+        onEnemyDeath = BundleManager.Instance.GetAsset<GameEventsSO>("eventso", "EventSO_OnEnemyKilled");
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
 

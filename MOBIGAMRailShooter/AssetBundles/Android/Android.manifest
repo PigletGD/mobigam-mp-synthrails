@@ -1,7 +1,51 @@
 ManifestFileVersion: 0
-CRC: 3338270206
+CRC: 370724551
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: singletons
+      Dependencies: {}
+    Info_1:
+      Name: eventso
+      Dependencies: {}
+    Info_2:
+      Name: audioclips
+      Dependencies: {}
+    Info_3:
+      Name: main_menu_sprites
+      Dependencies: {}
+    Info_4:
+      Name: main_menu_objects
+      Dependencies:
+        Dependency_0: main_menu_sprites
+    Info_5:
+      Name: volume_profiles
+      Dependencies: {}
+    Info_6:
+      Name: game_sprites
+      Dependencies: {}
+    Info_7:
+      Name: models
+      Dependencies: {}
+    Info_8:
+      Name: materials
+      Dependencies:
+        Dependency_0: game_sprites
+    Info_9:
+      Name: game_objects
+      Dependencies:
+        Dependency_0: game_sprites
+        Dependency_1: models
+        Dependency_2: materials
+        Dependency_3: animations
+    Info_10:
+      Name: game_entities
+      Dependencies:
+        Dependency_0: main_menu_sprites
+        Dependency_1: game_sprites
+        Dependency_2: models
+        Dependency_3: materials
+        Dependency_4: animations
+    Info_11:
+      Name: animations
       Dependencies: {}

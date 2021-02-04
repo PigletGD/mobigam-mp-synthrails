@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject pauseMenu = null;
-    [SerializeField] private GameObject gameHUD = null;
+    public GameObject pauseMenu = null;
+    public GameObject gameHUD = null;
 
     public void Pause()
     {
@@ -21,7 +21,7 @@ public class PauseMenu : MonoBehaviour
         gameHUD.SetActive(true);
     }
 
-    private void OnApplicationFocus(bool focus)
+    /*private void OnApplicationFocus(bool focus)
     {
         if (!focus)
         {
@@ -35,5 +35,5 @@ public class PauseMenu : MonoBehaviour
         {
             Pause();
         }
-    }
+    }*/
 }

@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 6665661313697403882}
   - component: {fileID: 6733380521184358851}
   - component: {fileID: 3034290638234803044}
-  - component: {fileID: 1837107088371085607}
   m_Layer: 11
-  m_Name: Money
+  m_Name: P_Money
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,20 +62,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1837107088371085607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 623461417076321793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f1e50710f9eb6d409f3028302e99bb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
-  RB: {fileID: 3034290638234803044}
 --- !u!1 &1551308638543005230
 GameObject:
   m_ObjectHideFlags: 0

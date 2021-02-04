@@ -15,7 +15,7 @@ public class PlayerShooting : MonoBehaviour
 
     private bool currentlyDragging = false;
 
-    [SerializeField] private GameHUD gameHUD = null;
+    public GameHUD gameHUD = null;
 
     private bool spentAmmo = false;
 
@@ -33,12 +33,6 @@ public class PlayerShooting : MonoBehaviour
         touchPanel.OnTap -= OnTap;
         touchPanel.OnDragging -= OnDragging;
         touchPanel.OnDragRelease -= OnDragRelease;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            Fire();
     }
 
     private void OnTap(object sender, TapEventArgs e)

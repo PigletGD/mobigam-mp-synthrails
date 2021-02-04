@@ -25,6 +25,12 @@ public class GameEventListener : MonoBehaviour
     // OBJECT GETS TO LISTEN IN ON EVENT IF ENABLED
     private void OnEnable()
     {
+        if (Event != null)
+            RegisterEvent();
+    }
+
+    public void RegisterEvent()
+    {
         Event.RegisterListener(this);
     }
 

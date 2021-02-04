@@ -4,7 +4,7 @@ public class OrientationManager : MonoBehaviour
 {
     public static OrientationManager Instance { get; private set; }
 
-    [SerializeField] private GameEventsSO onOrientationChange = null;
+    public GameEventsSO onOrientationChange = null;
     public bool isLandscape = false;
 
     public float portraitHeight = 0;

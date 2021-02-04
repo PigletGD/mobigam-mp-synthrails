@@ -11,13 +11,13 @@ public class TouchPanel : MonoBehaviour, UnityEngine.EventSystems.IDragHandler, 
     public Image hitBox = null;
     public OnScreenStick Joystick = null;
 
-    public TapProperty _tapProperty;
+    public TapProperty _tapProperty = new TapProperty();
     public event EventHandler<TapEventArgs> OnTap;
 
-    public SwipeProperty _swipeProperty;
+    public SwipeProperty _swipeProperty = new SwipeProperty();
     public event EventHandler<SwipeEventArgs> OnSwipe;
 
-    public DragProperty _dragProperty;
+    public DragProperty _dragProperty = new DragProperty();
     public event EventHandler<DragEventArgs> OnDragging;
     public event EventHandler<DragEventArgs> OnDragRelease;
 

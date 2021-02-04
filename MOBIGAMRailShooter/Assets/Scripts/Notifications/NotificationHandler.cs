@@ -52,11 +52,9 @@ public class NotificationHandler : MonoBehaviour
         AndroidNotificationCenter.CancelAllScheduledNotifications();
     }
 
-    public void SendSimpleNotif()
+    public void SendSimpleNotif(string title, string text, float seconds)
     {
-        string title = "Simple Notif";
-        string text = "This is a simple notif";
-        DateTime fireTime = DateTime.Now.AddSeconds(0.5f);
+        DateTime fireTime = DateTime.Now.AddSeconds(seconds);
 
         var notif = new AndroidNotification(title, text, fireTime);
         AndroidNotificationCenter.SendNotification(notif, "default");

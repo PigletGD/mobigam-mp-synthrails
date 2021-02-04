@@ -5,13 +5,25 @@ using UnityEngine;
 public class MoneyBehavior : MonoBehaviour
 {
     [SerializeField] float speed = 10f;
-    [SerializeField] Rigidbody RB = null;
+    public Rigidbody RB = null;
 
     private ScoreManager SM = null;
 
-    private void Awake()
+    private void Start()
     {
-        SM = GameObject.FindGameObjectWithTag("Score Manager").GetComponent<ScoreManager>();
+        GameObject temp = GameObject.FindGameObjectWithTag("Score Manager");
+        if (temp != null)
+            SM = temp.GetComponent<ScoreManager>();
+    }
+
+    private void Update()
+    {
+        if (SM == null)
+        {
+            GameObject temp = GameObject.FindGameObjectWithTag("Score Manager");
+            if (temp != null)
+                SM = temp.GetComponent<ScoreManager>();
+        }
     }
 
     private void OnEnable()

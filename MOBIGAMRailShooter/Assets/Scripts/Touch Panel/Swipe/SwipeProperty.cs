@@ -6,7 +6,7 @@ using UnityEngine;
 public class SwipeProperty
 {
     [Tooltip("Maximum gesture time until its not a swipe anymore")]
-    public float swipeTime = 0.7f;
+    public float swipeTime = 0.4f;
     [Tooltip("Minimum Distance covered to be considered a swipe")]
     public float swipeMinDistance = 0.1f;
 }
