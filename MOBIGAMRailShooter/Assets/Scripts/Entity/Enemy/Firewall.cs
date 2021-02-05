@@ -25,15 +25,54 @@ public class Firewall : MonoBehaviour
 
     public Camera mainCam = null;
 
+    private bool initialized = false;
+
     private void Awake()
     {
+        Initialize();
+    }
+
+    private void Update()
+    {
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam != null)
+                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
+        }
+    }
+
+    // Start is called before the first frame update
+    private void OnEnable()
+    {
+        if (!initialized) Initialize();
+
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam != null)
+                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
+        }
+
+        Invoke("ExecuteBehaviour", 0.05f);
+    }
+
+    private void OnDisable()
+    {
+        warningRT.sizeDelta = landscapeImageSize;
+    }
+
+    private void Initialize()
+    {
+        initialized = true;
+
         MeshRenderer MeshR = GetComponent<MeshRenderer>();
         MeshR.sharedMaterial = BundleManager.Instance.GetAsset<Material>("materials", "Mat_Dissolve");
         string shader = MeshR.sharedMaterial.shader.name;
         MeshR.sharedMaterial.shader = Shader.Find(shader);
 
         mainCam = Camera.main;
-        if (mainCam != null) 
+        if (mainCam != null)
             referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
 
         landscapeImageSize = warningRT.rect.size;
@@ -61,29 +100,6 @@ public class Firewall : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (mainCam == null)
-        {
-            mainCam = Camera.main;
-            if (mainCam != null)
-                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
-        }
-    }
-
-    // Start is called before the first frame update
-    private void OnEnable()
-    {
-        if (mainCam == null)
-        {
-            mainCam = Camera.main;
-            if (mainCam != null)
-                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
-        }
-
-        Invoke("ExecuteBehaviour", 0.05f);
-    }
-
     private void ExecuteBehaviour()
     {
         if (mainCam != null)
@@ -100,7 +116,16 @@ public class Firewall : MonoBehaviour
 
     public void ChangeImageRectTransform()
     {
+        if (!initialized) Initialize();
+
         Transform parentTrans = transform.parent;
+
+        if (mainCam == null)
+        {
+            mainCam = Camera.main;
+            if (mainCam != null)
+                referenceWorldPos = mainCam.ScreenToWorldPoint(warningRT.anchoredPosition);
+        }
 
         if (isVerticalWall)
         {
@@ -127,8 +152,7 @@ public class Firewall : MonoBehaviour
 
         if (OrientationManager.Instance.isLandscape)
             warningRT.sizeDelta = landscapeImageSize;
-        else
-            warningRT.sizeDelta = portraitImageSize;
+        else warningRT.sizeDelta = portraitImageSize;
 
         warningRT.anchoredPosition = new Vector2(xLoc, yLoc);
     }

@@ -67,7 +67,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void LookAtPlayer()
     {
-        transform.LookAt(player);
+        if (player != null)
+            transform.LookAt(player);
     }
 
     public void TakeDamage(int damage)
@@ -81,6 +82,8 @@ public class EnemyBehaviour : MonoBehaviour
     public void Die()
     {
         StopAllCoroutines();
+
+        AudioManager.Instance.Play("Explosion");
 
         onEnemyDeath.Raise();
 

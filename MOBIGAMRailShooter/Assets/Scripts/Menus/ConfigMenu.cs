@@ -65,8 +65,11 @@ public class ConfigMenu : MonoBehaviour
     public void PlayVideoAd()
     {
         if (AdsManager.Instance.showAds)
+        {
+            playAdText.text = "Play Video Ad";
             AdsManager.Instance.ShowInterstitialAd();
-        else Debug.Log("Ad can't be shown");
+        }
+        else playAdText.text = "Can't Play Ad";
     }
 
     public void ToggleAds()
@@ -74,11 +77,21 @@ public class ConfigMenu : MonoBehaviour
         if (AdsManager.Instance.showAds)
         {
             AdsManager.Instance.showAds = false;
+            AdsManager.Instance.HideBannerAd();
             toggleAds.text = "Enable Ads";
         }
         else
         {
             AdsManager.Instance.showAds = true;
+            if (OrientationManager.Instance.isLandscape)
+            {
+                AdsManager.Instance.ShowBannerAd();
+            }
+            else
+            {
+                // Debug.Log("Portrait");
+                AdsManager.Instance.HideBannerAd();
+            }
             toggleAds.text = "Disable Ads";
         }
     }

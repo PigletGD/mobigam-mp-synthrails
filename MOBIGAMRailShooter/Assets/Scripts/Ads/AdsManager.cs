@@ -35,23 +35,31 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            Advertisement.Initialize(GameID, true);
-            Advertisement.AddListener(this);
+            InitializeAds();
 
             ShowBannerAd();
 
             showAds = true;
-
-            Debug.Log("Ad Manager Instantiated");
         }
         else Destroy(gameObject);
+    }
+
+    public void InitializeAds()
+    {
+        Advertisement.Initialize(GameID, true);
+        Advertisement.AddListener(this);
     }
 
     public void ShowInterstitialAd()
     {
         ConfigMenu configMenu = FindObjectOfType<ConfigMenu>();
 
-        if (Advertisement.IsReady(SampleInterstitialAd))
+        if (!InternetManager.Instance.CheckConnectivity())
+        {
+            if (configMenu != null)
+                configMenu.playAdText.text = "No Internet";
+        }
+        else if (Advertisement.IsReady(SampleInterstitialAd))
         {
             if (configMenu != null)
                 configMenu.playAdText.text = "Play Video Ad";
@@ -62,8 +70,6 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
         {
             if (configMenu != null)
                 configMenu.playAdText.text = "No Ads Found";
-
-            Debug.Log("No Interstitial Ads");
         }
         
     }
@@ -95,31 +101,34 @@ public class AdsManager : MonoBehaviour, IUnityAdsListener
 
     public void ShowRewardedAd()
     {
-        if (Advertisement.IsReady(SampleRewardedAd))
+        if (InternetManager.Instance.CheckConnectivity() && showAds && Advertisement.IsReady(SampleRewardedAd))
             Advertisement.Show(SampleRewardedAd);
         else
         {
             GameHUD gameHUD = FindObjectOfType<GameHUD>();
             if (gameHUD != null)
             {
-                gameHUD.playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Error: Could not load Ads. Try again?";
+                if (!InternetManager.Instance.CheckConnectivity())
+                    gameHUD.playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Error: Internet failed to reach. Try again?";
+                else
+                    gameHUD.playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "Error: Could not load Ads. Try again?";
             }
         }
     }
 
     public void OnUnityAdsReady(string placementId)
     {
-        throw new System.NotImplementedException();
+        // .. Implementation here
     }
 
     public void OnUnityAdsDidError(string message)
     {
-        throw new System.NotImplementedException();
+        // .. Implementation here
     }
 
     public void OnUnityAdsDidStart(string placementId)
     {
-        throw new System.NotImplementedException();
+        // .. Implementation here
     }
 
     public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)

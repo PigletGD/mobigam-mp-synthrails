@@ -42,7 +42,6 @@ public class ShopMenu : MonoBehaviour
 
     public void BuyHealth()
     {
-        Debug.Log(isHealthMaxed);
         if (isHealthMaxed) return;
 
         SaveState saveState = SaveManager.Instance.state;

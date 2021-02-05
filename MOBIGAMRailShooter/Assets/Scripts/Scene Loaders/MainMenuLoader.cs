@@ -20,6 +20,17 @@ public class MainMenuLoader : MonoBehaviour
             LoadSingletons();
 
         LoadMainMenu();
+
+        if (AdsManager.Instance != null)
+            AdsManager.Instance.ShowBannerAd();
+
+        GameEventListener GEL = gameObject.AddComponent<GameEventListener>();
+        GEL.Event = BundleManager.Instance.GetAsset<GameEventsSO>(eventSOBundleName, "EventSO_OnOrientationChange");
+        GEL.Response = new UnityEngine.Events.UnityEvent();
+        GEL.Response.AddListener(HandleBannerSwitch);
+        GEL.RegisterEvent();
+
+        HandleBannerSwitch();
     }
 
     private void LoadSingletons()
@@ -31,13 +42,18 @@ public class MainMenuLoader : MonoBehaviour
         GO.AddComponent<SaveManager>();
         Instantiate(GO);
 
+        // Load Internet Manager
+        GO = BundleManager.Instance.GetAsset<GameObject>(singletonBundleName, "P_InternetManager");
+        GO.AddComponent<InternetManager>();
+        Instantiate(GO);
+
         // Load Audio Manager
         GO = BundleManager.Instance.GetAsset<GameObject>(singletonBundleName, "P_AudioManager");
         AudioManager AM = GO.AddComponent<AudioManager>();
         AudioClip audioClip = null;
 
         // Setup Audioclips
-        AM.sounds = new Sound[4];
+        AM.sounds = new Sound[5];
 
         audioClip = BundleManager.Instance.GetAsset<AudioClip>(audioBundleName, "A_MainMenuMusic");
         AM.sounds[0] = CreateSound("MainMenuMusic", audioClip, 0.5f, 1.0f);
@@ -47,6 +63,8 @@ public class MainMenuLoader : MonoBehaviour
         AM.sounds[2] = CreateSound("Shot", audioClip, 0.9f, 1.0f);
         audioClip = BundleManager.Instance.GetAsset<AudioClip>(audioBundleName, "A_Firewall");
         AM.sounds[3] = CreateSound("Firewall", audioClip, 0.9f, 1.0f);
+        audioClip = BundleManager.Instance.GetAsset<AudioClip>(audioBundleName, "A_Explosion");
+        AM.sounds[4] = CreateSound("Explosion", audioClip, 0.9f, 1.0f);
 
         // Initialize sound instances
         AM.InitializeSounds();
@@ -84,9 +102,9 @@ public class MainMenuLoader : MonoBehaviour
 
         // Load Main Menu Camera
         GO = BundleManager.Instance.GetAsset<GameObject>(mainMenuObjectsBundleName, "P_MainCamera");
+        GO = Instantiate(GO);
         GO.AddComponent<Camera>();
         GO.AddComponent<UniversalAdditionalCameraData>();
-        Instantiate(GO);
 
         // Load Event System
         GO = BundleManager.Instance.GetAsset<GameObject>(mainMenuObjectsBundleName, "P_EventSystem");
@@ -252,5 +270,28 @@ public class MainMenuLoader : MonoBehaviour
         newUpgrade.upgradeValue = value;
 
         return newUpgrade;
+    }
+
+    private void HandleBannerSwitch()
+    {
+        StopAllCoroutines();
+
+        if (AdsManager.Instance.showAds)
+            StartCoroutine("HandleBannerSwitch_Routine");
+    }
+
+    IEnumerator HandleBannerSwitch_Routine()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        if (OrientationManager.Instance.isLandscape)
+        {
+            AdsManager.Instance.ShowBannerAd();
+        }
+        else 
+        {
+            // Debug.Log("Portrait");
+            AdsManager.Instance.HideBannerAd();
+        }
     }
 }

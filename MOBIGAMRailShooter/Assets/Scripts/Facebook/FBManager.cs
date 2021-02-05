@@ -20,8 +20,6 @@ public class FBManager : MonoBehaviour
             if (!FB.IsInitialized)
                 FB.Init(OnFBInitialize, OnHideFB);
             else FB.ActivateApp();
-
-            Debug.Log("Facebook Manager Instantiated");
         }
         else Destroy(gameObject);
     }
@@ -31,7 +29,6 @@ public class FBManager : MonoBehaviour
         if (FB.IsInitialized)
         {
             FB.ActivateApp();
-            Debug.Log("FB Done Init");
         }
         else Debug.LogError("Failed to Init FB");
     }
@@ -56,7 +53,6 @@ public class FBManager : MonoBehaviour
             {
                 gameHUD.okayButton.gameObject.SetActive(true);
                 gameHUD.uploadPanelText.text = "Error: User failed to login";
-                Debug.Log("Changed text to login fail");
             }
         }
     }
@@ -82,10 +78,7 @@ public class FBManager : MonoBehaviour
             {
                 gameHUD.okayButton.gameObject.SetActive(true);
                 gameHUD.uploadPanelText.text = "Error: Facebook initialization fail";
-                Debug.Log("Changed text to fb failed initialization");
             }
-
-            Debug.LogError("FB not yet initialized");
         }
     }
 
@@ -102,18 +95,14 @@ public class FBManager : MonoBehaviour
             }
 
             uploadSuccessful = true;
-
-            Debug.Log("Uploaded photo with id: " + res.ResultDictionary["id"].ToString());
         }
         else
         {
             if (gameHUD != null)
             {
                 gameHUD.okayButton.gameObject.SetActive(true);
-                gameHUD.uploadPanelText.text = "Error uploading photo" + res.Error;
+                gameHUD.uploadPanelText.text = "Error uploading photo: " + res.Error;
             }
-
-            Debug.Log("Error uploading photo" + res.Error);
         }
     }
 
@@ -141,36 +130,48 @@ public class FBManager : MonoBehaviour
             gameHUD.uploadPanel.SetActive(true);
             gameHUD.okayButton.gameObject.SetActive(false);
             gameHUD.uploadPanelText.text = "Uploading image of score...";
-            Debug.Log("Changed text to uploading image score");
         }
 
-        AdsManager.Instance.ShowBannerAd();
-
-        Debug.Log("Uploading Image");
+        if (AdsManager.Instance.showAds)
+            AdsManager.Instance.ShowBannerAd();
     }
 
     public void UploadScreenshot()
     {
-        aboutToUpload = true;
-        uploadSuccessful = false;
+        GameHUD gameHUD;
 
-        if (FB.IsLoggedIn)
+        if (InternetManager.Instance.CheckConnectivity())
         {
-            aboutToUpload = false;
-            StartCoroutine(ScreenshotAndUpload());
+            aboutToUpload = true;
+            uploadSuccessful = false;
+
+            if (FB.IsLoggedIn)
+            {
+                aboutToUpload = false;
+                StartCoroutine(ScreenshotAndUpload());
+            }
+            else
+            {
+                gameHUD = FindObjectOfType<GameHUD>();
+                if (gameHUD != null)
+                {
+                    gameHUD.okayButton.gameObject.SetActive(false);
+                    gameHUD.SetActiveUploadPanel(true);
+                    gameHUD.uploadPanelText.text = "Logging in...";
+                }
+
+                LoginFB();
+            }
         }
         else
         {
-            GameHUD gameHUD = FindObjectOfType<GameHUD>();
+            gameHUD = FindObjectOfType<GameHUD>();
             if (gameHUD != null)
             {
-                gameHUD.okayButton.gameObject.SetActive(false);
+                gameHUD.okayButton.gameObject.SetActive(true);
                 gameHUD.SetActiveUploadPanel(true);
-                gameHUD.uploadPanelText.text = "Logging in...";
-                Debug.Log("Changed text to logging in");
+                gameHUD.uploadPanelText.text = "Error: Not connected to Internet";
             }
-
-            LoginFB();
         }
     }
 }

@@ -18,14 +18,7 @@ public class Crosshair : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distance = 15 - playerModel.position.z;
-
-        landscapeImageSize = RT.rect.size;
-        portraitImageSize = RT.rect.size * OrientationManager.Instance.uiPortraitSizeFactor;
-
-        ChangeImageSize();
-
-        mainCam = Camera.main;
+        Initialize();
     }
 
     // Update is called once per frame
@@ -43,6 +36,18 @@ public class Crosshair : MonoBehaviour
             RT.anchoredPosition = screenPos - new Vector2(canvas.pixelRect.width * 0.5f, canvas.pixelRect.height * 0.5f);
         }
         else mainCam = Camera.main;
+    }
+
+    public void Initialize()
+    {
+        distance = 15 - playerModel.position.z;
+
+        landscapeImageSize = RT.rect.size;
+        portraitImageSize = RT.rect.size * OrientationManager.Instance.uiPortraitSizeFactor;
+
+        ChangeImageSize();
+
+        mainCam = Camera.main;
     }
 
     public void ChangeImageSize()

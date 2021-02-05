@@ -26,6 +26,9 @@ public class GameLoader : MonoBehaviour
             LoadSingletons();
 
         LoadGameObjects();
+
+        if (AdsManager.Instance != null)
+            AdsManager.Instance.HideBannerAd();
     }
 
     private void LoadSingletons()
@@ -35,6 +38,11 @@ public class GameLoader : MonoBehaviour
         // Load Save Manager
         GO = BundleManager.Instance.GetAsset<GameObject>(singletonBundleName, "P_SaveManager");
         GO.AddComponent<SaveManager>();
+        Instantiate(GO);
+
+        // Load Internet Manager
+        GO = BundleManager.Instance.GetAsset<GameObject>(singletonBundleName, "P_InternetManager");
+        GO.AddComponent<InternetManager>();
         Instantiate(GO);
 
         // Load Audio Manager
@@ -121,16 +129,16 @@ public class GameLoader : MonoBehaviour
         //MeshR.material.EnableKeyword("_EMISSION");
 
         // Load
-        GameObject canvas = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Canvas");
-        GameObject player = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Player");
-        GameObject pools = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Pools");
-        GameObject systems = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Systems");
+        GameObject canvasAsset = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Canvas");
+        GameObject playerAsset = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Player");
+        GameObject poolsAsset = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Pools");
+        GameObject systemsAsset = BundleManager.Instance.GetAsset<GameObject>(gameObjectsBundleName, "P_Systems");
 
         // Instantiate
-        canvas = Instantiate(canvas);
-        player = Instantiate(player);
-        pools = Instantiate(pools);
-        systems = Instantiate(systems);
+        GameObject canvas = Instantiate(canvasAsset);
+        GameObject player = Instantiate(playerAsset);
+        GameObject pools = Instantiate(poolsAsset);
+        GameObject systems = Instantiate(systemsAsset);
 
         pools.transform.SetAsFirstSibling();
 
@@ -226,7 +234,7 @@ public class GameLoader : MonoBehaviour
 
         // Load Canvas
         GameObject gameHUDPanel = canvas.transform.GetChild(0).gameObject;
-        GameObject resultsPanel = canvas.transform.GetChild(1).gameObject;
+        GameObject resultsPanel = canvas.transform.GetChild(1).GetChild(0).gameObject;
         GameObject pauseMenu = canvas.transform.GetChild(2).gameObject;
         GameObject portraitUI = gameHUDPanel.transform.GetChild(1).gameObject;
         GameObject landscapeUI = gameHUDPanel.transform.GetChild(2).gameObject;
@@ -275,7 +283,7 @@ public class GameLoader : MonoBehaviour
         tempObject = tempObjectsHolder.transform.GetChild(3).gameObject;
         gameHUD.blueAmmoL = tempObject.transform.GetChild(0).GetComponent<Image>();
         gameHUD.blueTextL = tempObject.transform.GetChild(1).GetComponent<Text>();
-        gameHUD.resultsPanel = resultsPanel;
+        gameHUD.resultsPanel = resultsPanel.transform.parent.gameObject;
         gameHUD.verdictText = resultsPanel.transform.GetChild(0).GetComponent<Text>();
         gameHUD.resourceText = resultsPanel.transform.GetChild(1).GetComponent<Text>();
         //DO SCORE MANAGER LATER
@@ -364,12 +372,24 @@ public class GameLoader : MonoBehaviour
 
         GameObject camera = playerCameraHolder.transform.GetChild(0).gameObject;
         camera.tag = "MainCamera";
-        Camera camComp = camera.AddComponent<Camera>();
-        camera.AddComponent<UniversalAdditionalCameraData>();
-        CameraOrienter CO = playerCameraHolder.AddComponent<CameraOrienter>();
-        camera.gameObject.GetComponent<UniversalAdditionalCameraData>().renderPostProcessing = true;
-        camComp.clearFlags = CameraClearFlags.SolidColor;
-        camComp.backgroundColor = Color.black;
+        Camera camComp;
+        CameraOrienter CO;
+        if (camera.GetComponent<Camera>() == null)
+        {
+            camComp = camera.AddComponent<Camera>();
+            camComp.enabled = true;
+            camera.AddComponent<UniversalAdditionalCameraData>();
+            camera.gameObject.GetComponent<UniversalAdditionalCameraData>().renderPostProcessing = true;
+            camComp.clearFlags = CameraClearFlags.SolidColor;
+            camComp.backgroundColor = Color.black;
+        }
+        else
+        {
+            camComp = camera.GetComponent<Camera>();
+        }
+        if (playerCameraHolder.GetComponent<CameraOrienter>() == null) CO = playerCameraHolder.AddComponent<CameraOrienter>();
+        else CO = playerCameraHolder.GetComponent<CameraOrienter>();
+
         CO.cam = camComp;
         GEL = playerCameraHolder.AddComponent<GameEventListener>();
         GEL.Event = BundleManager.Instance.GetAsset<GameEventsSO>(eventSOBundleName, "EventSO_OnOrientationChange");
@@ -378,6 +398,7 @@ public class GameLoader : MonoBehaviour
         GEL.RegisterEvent();
 
         GameObject crosshair = player.transform.GetChild(3).GetChild(0).gameObject;
+        PI.crosshair = crosshair;
         Crosshair CH = crosshair.AddComponent<Crosshair>();
         CH.RT = crosshair.GetComponent<RectTransform>();
         CH.playerModel = PMove.planeModelTransform;
@@ -385,7 +406,7 @@ public class GameLoader : MonoBehaviour
         GEL = crosshair.AddComponent<GameEventListener>();
         GEL.Event = BundleManager.Instance.GetAsset<GameEventsSO>(eventSOBundleName, "EventSO_OnOrientationChange");
         GEL.Response = new UnityEngine.Events.UnityEvent();
-        GEL.Response.AddListener(gameHUD.ChangeHUD);
+        GEL.Response.AddListener(CH.ChangeImageSize);
         GEL.RegisterEvent();
 
         // Load Systems

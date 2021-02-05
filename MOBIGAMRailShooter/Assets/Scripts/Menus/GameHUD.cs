@@ -35,6 +35,7 @@ public class GameHUD : MonoBehaviour
     public Button okayButton = null;
     public Button fbButton = null;
     private bool bossDefeated = false;
+    private bool gameOver = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,15 +59,18 @@ public class GameHUD : MonoBehaviour
 
     public void ChangeHUD()
     {
-        if (!OrientationManager.Instance.isLandscape)
+        if (!gameOver)
         {
-            portraitUI.SetActive(true);
-            landscapeUI.SetActive(false);
-        }
-        else
-        {
-            portraitUI.SetActive(false);
-            landscapeUI.SetActive(true);
+            if (!OrientationManager.Instance.isLandscape)
+            {
+                portraitUI.SetActive(true);
+                landscapeUI.SetActive(false);
+            }
+            else
+            {
+                portraitUI.SetActive(false);
+                landscapeUI.SetActive(true);
+            }
         }
     }
 
@@ -133,6 +137,11 @@ public class GameHUD : MonoBehaviour
 
     public void DisplayResults()
     {
+        if (AdsManager.Instance.showAds)
+            AdsManager.Instance.ShowBannerAd();
+
+        gameOver = true;
+
         RectTransform RT = resultsPanel.GetComponent<RectTransform>();
         RT.sizeDelta = new Vector2(RT.sizeDelta.x, RT.sizeDelta.y) * 0.7f;
 
@@ -155,8 +164,6 @@ public class GameHUD : MonoBehaviour
         portraitUI.SetActive(false);
         landscapeUI.SetActive(false);
         resultsPanel.SetActive(true);
-
-        Debug.Log("Pause");
 
         Time.timeScale = 0;
     }
@@ -196,25 +203,29 @@ public class GameHUD : MonoBehaviour
     {
         if (e.PlacementID == AdsManager.SampleRewardedAd)
         {
+            Debug.Log("Here");
+
             switch (e.AdShowResult)
             {
                 case ShowResult.Failed:
-                    Debug.Log("Ad failed");
+                    Debug.Log("Fail");
                     Text failText = playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>();
                     failText.text = "Error: Ad failed. Try again?";
                     break;
                 case ShowResult.Skipped:
-                    Debug.Log("Ad is skipped");
+                    Debug.Log("Skip");
                     Text skipText = playAdPanel.transform.GetChild(0).GetChild(0).GetComponent<Text>();
                     skipText.text = "Error: Ad is skipped. Try again?";
                     break;
-                case ShowResult.Finished: Debug.Log("Ad is finished properly");
+                case ShowResult.Finished:
+                    Debug.Log("Success");
                     SaveManager.Instance.state.currency += 20;
                     SaveManager.Instance.Save();
                     int money = SM.moneyCollected + 20;
                     resourceText.text = "SCORE: " + SM.score.ToString() + "\nMONEY COLLECTED: " + money.ToString();
                     playAdButton.interactable = false;
                     playAdPanel.SetActive(false);
+                    Debug.Log(playAdPanel.name);
                     break;
             }
         }

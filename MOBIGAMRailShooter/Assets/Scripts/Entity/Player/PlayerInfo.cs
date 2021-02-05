@@ -25,6 +25,8 @@ public class PlayerInfo : MonoBehaviour
     public GameHUD gameHUD = null;
 
     public GameEventsSO onPlayerDeath = null;
+
+    public GameObject crosshair = null;
     private void Awake()
     {
         MR = GetComponentInChildren<MeshRenderer>();
@@ -127,19 +129,20 @@ public class PlayerInfo : MonoBehaviour
 
         if (health <= 0)
             Die();
+            
     }
 
     public void Die()
     {
-        GameObject go = explosionPool.RetrieveObject();
-        go.transform.position = transform.position;
+        AudioManager.Instance.Play("Explosion");
 
-        GameObject crosshair = FindObjectOfType<Crosshair>().gameObject;
+        GameObject go = explosionPool.RetrieveObject();
+        if (go != null) go.transform.position = transform.position;
+
         if (crosshair != null) crosshair.SetActive(false);
 
-        gameHUD.DisplayResults();
-
-        onPlayerDeath.Raise();
+        if (gameHUD == null) Debug.Log("null hud");
+        else gameHUD.DisplayResults();
 
         gameObject.SetActive(false);
     }

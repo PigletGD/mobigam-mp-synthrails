@@ -43,8 +43,6 @@ public class PlayerMovement : MonoBehaviour
         if (SystemInfo.supportsGyroscope) Input.gyro.enabled = true;
         else Debug.LogError("No Gyroscope in Device");
 
-        Debug.Log(touchPanel.gameObject.activeInHierarchy);
-
         touchPanel.OnDragging += OnDragging;
         touchPanel.OnDragRelease += OnDragRelease;
 

@@ -30,11 +30,6 @@ public class NotificationHandler : MonoBehaviour
         SendRepeatNotif();
     }
 
-    private void OnApplicationPause(bool pause)
-    {
-        AndroidNotificationCenter.CancelAllNotifications();
-    }
-
     private void OnApplicationQuit()
     {
         AndroidNotificationCenter.CancelAllNotifications();
@@ -63,45 +58,13 @@ public class NotificationHandler : MonoBehaviour
     public void SendRepeatNotif()
     {
         string title = "Repeat Notif";
-        string text = "This is a repeating notif";
         int intervalTime = SaveManager.Instance.state.notificationInterval;
+        string text = "This repeat notification was sent after " + intervalTime.ToString() + " minutes.";
         DateTime fireTime = DateTime.Now.AddMinutes(intervalTime);
         TimeSpan interval = new TimeSpan(0, intervalTime, 0);
 
         var notif = new AndroidNotification(title, text, fireTime, interval);
         AndroidNotificationCenter.SendNotification(notif, "repeat");
-    }
-
-    public void SendDataNotif()
-    {
-        string title = "Data Notif";
-        string text = "This is a data notif";
-        int intervalTime = SaveManager.Instance.state.notificationInterval;
-        DateTime fireTime = DateTime.Now.AddMinutes(intervalTime);
-        TimeSpan interval = new TimeSpan(0, intervalTime, 0);
-
-        var notif = new AndroidNotification(title, text, fireTime);
-
-        notif.IntentData = "I HAVE THE POWER OF GOD AND ANIME BY MY SIDE";
-
-        AndroidNotificationCenter.SendNotification(notif, "default");
-    }
-
-    public void ProcessData()
-    {
-        /*
-        var data = AndroidNotificationCenter.GetLastNotificationIntent();
-
-        if (data == null)
-        {
-            dataTxt.gameObject.SetActive(false);
-        }
-        else
-        {
-            string dataString = data.Notification.IntentData;
-            dataTxt.text = dataString;
-        }
-        */
     }
 
     public void BuildDefaultNotifChannel()

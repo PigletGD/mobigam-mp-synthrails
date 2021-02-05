@@ -153,6 +153,8 @@ public class BossOneBehaviour : MonoBehaviour
     {
         StopAllCoroutines();
 
+        AudioManager.Instance.Play("Explosion");
+
         onBossDeath.Raise();
 
         GameObject go = explosionPool.RetrieveObject();
